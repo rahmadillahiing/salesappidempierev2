@@ -1,0 +1,413 @@
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  useDrawerProgress,
+} from "@react-navigation/drawer";
+import Animated from "react-native-reanimated";
+import { connect } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { setSelectedTab } from "../stores/tab/tabActions";
+
+import { MainLayout } from "../screens";
+import { GetDataLocal } from "../utils";
+import {
+  COLORS,
+  FONTS,
+  SIZES,
+  constants,
+  icons,
+  dummyData,
+} from "../constants";
+
+const Drawer = createDrawerNavigator();
+
+const CustomDrawerItem = ({ label, icon, isFocused, onPress }) => {
+  return (
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        height: 32,
+        marginBottom: SIZES.base,
+        alignItems: "center",
+        paddingLeft: SIZES.radius,
+        borderRadius: SIZES.base,
+        backgroundColor: isFocused ? COLORS.transparentBlack1 : null,
+      }}
+      onPress={onPress}
+    >
+      <Image
+        source={icon}
+        style={{
+          width: 20,
+          height: 20,
+          tintColor: COLORS.white,
+        }}
+      />
+
+      <Text
+        style={{
+          marginLeft: 5,
+          color: COLORS.white,
+          ...FONTS.h5,
+        }}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
+  const [profile, setProfile] = useState({
+    fullname: "",
+    token: "",
+    id: "",
+  });
+
+  useEffect(() => {
+    // console.log("cek login");
+    getUser();
+  }, []);
+
+  const getUser = () => {
+    GetDataLocal("user").then((res) => {
+      const data = res;
+      // console.log(res);
+      setProfile(data);
+    });
+  };
+
+  const clearLogin = () => {
+    AsyncStorage.removeItem("user")
+      .then(() => {
+        AsyncStorage.removeItem("todos");
+        AsyncStorage.removeItem("sales");
+        AsyncStorage.removeItem("retur");
+        AsyncStorage.removeItem("salesqty");
+        // AsyncStorage.removeItem("lokasi");
+        navigation.replace("SignIn");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  return (
+    <DrawerContentScrollView
+      scrollEnabled={false}
+      contentContainerStyle={{
+        flex: 1,
+        backgroundColor: COLORS.primary,
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: SIZES.radius,
+        }}
+      >
+        {/* Profile */}
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            marginTop: SIZES.radius,
+            alignItems: "center",
+          }}
+          onPress={() => {
+            navigation.closeDrawer();
+          }}
+        >
+          <Image
+            source={dummyData.myProfile?.profile_image}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: SIZES.radius,
+            }}
+          />
+
+          <View
+            style={{
+              marginLeft: SIZES.radius,
+            }}
+          >
+            <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+              {profile.fullname}
+            </Text>
+            {/* <Text style={{ color: COLORS.white, ...FONTS.body4 }}>
+              View your profile
+            </Text> */}
+          </View>
+        </TouchableOpacity>
+
+        {/* Drawer Items */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{
+            flex: 1,
+            paddingHorizontal: SIZES.radius,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              marginTop: SIZES.height > 800 ? SIZES.padding : SIZES.base,
+            }}
+          >
+            <CustomDrawerItem
+              label={constants.screens.home}
+              icon={icons.home}
+              isFocused={selectedTab == constants.screens.home}
+              onPress={() => {
+                setSelectedTab(constants.screens.home);
+                navigation.navigate("MainLayout");
+              }}
+              profile={profile}
+            />
+
+            {/* Line Divider */}
+            <View
+              style={{
+                height: 1,
+                marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
+                marginLeft: SIZES.radius,
+                backgroundColor: COLORS.lightGray1,
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Display before"
+              icon={icons.boxes}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("ShelvingAwal");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Display After"
+              icon={icons.rack}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("ShelvingSetelah");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Shelving & Floor"
+              icon={icons.floor}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("ShelvingFloor");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Cek Stock"
+              icon={icons.box}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("StockSurvey");
+              }}
+            />
+
+            <View
+              style={{
+                height: 1,
+                marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
+                marginLeft: SIZES.radius,
+                backgroundColor: COLORS.lightGray1,
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Input SO Beras"
+              icon={icons.discount}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("salesorderBeras");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Input Retur Beras"
+              icon={icons.help}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("Retur");
+              }}
+            />
+
+            <View
+              style={{
+                height: 1,
+                marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
+                marginLeft: SIZES.radius,
+                backgroundColor: COLORS.lightGray1,
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Konfirmasi Invoice"
+              icon={icons.globe}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("ConfirmInvoice");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Konfirmasi TTF"
+              icon={icons.globe}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("ConfirmTtf");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Invoice Kunjungan"
+              icon={icons.term}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("BillingCustomer");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Invoice Nonkunjungan"
+              icon={icons.term}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("BillingInvoiceNonKunjungan");
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Invoice Status"
+              icon={icons.term}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("InvoiceEditHeader");
+              }}
+            />
+
+            {/* Line Divider */}
+            <View
+              style={{
+                height: 1,
+                marginVertical: SIZES.height > 800 ? SIZES.radius : SIZES.base,
+                marginLeft: SIZES.radius,
+                backgroundColor: COLORS.lightGray1,
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Customer Baru"
+              icon={icons.location}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("CustomerSurvey");
+              }}
+            />
+
+            {/* Line Divider */}
+            <View
+              style={{
+                height: 1,
+                marginVertical: SIZES.height > 800 ? SIZES.radius : SIZES.base,
+                marginLeft: SIZES.radius,
+                backgroundColor: COLORS.lightGray1,
+              }}
+            />
+
+            <CustomDrawerItem
+              label="Monitoring SO"
+              icon={icons.globe}
+              onPress={() => {
+                navigation.closeDrawer();
+                navigation.navigate("MonitoringSo");
+              }}
+            />
+          </View>
+          {/* Line Divider */}
+          <View
+            style={{
+              height: 1,
+              marginVertical: SIZES.height > 800 ? SIZES.radius : SIZES.base,
+              marginLeft: SIZES.radius,
+              backgroundColor: COLORS.lightGray1,
+            }}
+          />
+
+          <View
+            style={{
+              marginBottom: SIZES.height > 800 ? SIZES.padding : 0,
+            }}
+          >
+            <CustomDrawerItem
+              label="Logout"
+              icon={icons.logout}
+              onPress={clearLogin}
+            />
+          </View>
+        </ScrollView>
+      </View>
+    </DrawerContentScrollView>
+  );
+};
+
+const CustomDrawer = ({ selectedTab, setSelectedTab }) => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: COLORS.primary,
+      }}
+    >
+      <Drawer.Navigator
+        useLegacyImplementation
+        drawerType="slide"
+        overlayColor="transparent"
+        screenOptions={{
+          headerShown: false,
+          overlayColor: "transparent",
+          drawerStyle: {
+            width: "60%",
+          },
+        }}
+        initialRouteName="MainLayout"
+        drawerContent={(props) => {
+          return (
+            <CustomDrawerContent
+              navigation={props.navigation}
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+            />
+          );
+        }}
+      >
+        <Drawer.Screen name="MainLayout">
+          {(props) => <MainLayout {...props} />}
+        </Drawer.Screen>
+      </Drawer.Navigator>
+    </View>
+  );
+};
+
+function mapStateToProps(state) {
+  return {
+    selectedTab: state.tabReducer.selectedTab,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setSelectedTab: (selectedTab) => {
+      return dispatch(setSelectedTab(selectedTab));
+    },
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawer);
