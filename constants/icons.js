@@ -64,7 +64,8 @@ const rack = require("../assets/icons/rack.png");
 const floor = require("../assets/icons/products.png");
 const versus = require("../assets/icons/versus.png");
 const sales = require("../assets/icons/best-price.png");
-
+const attach = require("../assets/icons/attach.png");
+const hand = require("../assets/icons/hand.png");
 export default {
   apple,
   back,
@@ -132,4 +133,6 @@ export default {
   floor,
   versus,
   sales,
+  attach,
+  hand,
 };

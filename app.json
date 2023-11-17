@@ -31,6 +31,12 @@
     "web": {
       "favicon": "./assets/iconraja.png"
     },
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic",
+    "extra": {
+      "eas": {
+        "projectId": "3b3d8df7-2a0d-4bc9-8948-d17c537635ad"
+      }
+    },
+    "plugins": ["react-native-vision-camera"]
   }
 }

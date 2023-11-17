@@ -141,6 +141,7 @@ const BillingInvoiceNonKunjungan = () => {
               nourut: invoice.inv_id,
               lokasi: invoice.CustomerName,
               nik: profile.id,
+              invtotalall: invoice.inv_totalfull,
             },
           })
         }
@@ -153,7 +154,7 @@ const BillingInvoiceNonKunjungan = () => {
               // textDecorationLine: todo?.completed ? "line-through" : "none",
             }}
           >
-            No Tagihan : {invoice?.inv_number}
+            No Invoice : {invoice?.inv_number}
           </Text>
           <Text
             style={{
@@ -175,8 +176,21 @@ const BillingInvoiceNonKunjungan = () => {
               alignContent: "flex-end",
             }}
           >
+            Nilai Invoice : Rp.{NumberFormat(invoice?.inv_totalfull.toString())}
+          </Text>
+          <Text
+            style={{
+              // fontWeight: "bold",
+              fontSize: 14,
+              color: "#1f145c",
+              // textDecorationLine: todo?.completed ? "line-through" : "none",
+              alignItems: "flex-end",
+              alignContent: "flex-end",
+            }}
+          >
             Tagihan : Rp.{NumberFormat(invoice?.inv_total.toString())}
           </Text>
+
           <Text
             style={{
               // fontWeight: "bold",

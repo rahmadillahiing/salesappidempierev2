@@ -368,7 +368,7 @@ const InvoiceDetail = ({ navigation, route }) => {
                           {
                             text: "Ada retur?",
                             onPress: () => {
-                              navigation.navigate("retur");
+                              navigation.navigate("Retur");
                             },
                           },
                         ]);
@@ -525,6 +525,17 @@ const InvoiceDetail = ({ navigation, route }) => {
               {detailItem?.invnumber}
             </Text>
           </View>
+          <Text
+            style={{
+              color: COLORS.darkGray,
+              ...FONTS.body3,
+              textAlign: "right",
+            }}
+          >
+            {`Nilai Invoice Rp. ${NumberFormat(
+              String(detailItem.invtotalall)
+            )}`}
+          </Text>
           <Text
             style={{
               color: COLORS.darkGray,

@@ -68,11 +68,11 @@ const SalesOrderBeras = ({ navigation }) => {
 
   const [todos, setTodos] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getLokasi();
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     getLokasi();
+  //   }, [])
+  // );
 
   useEffect(() => {
     // let v = moment().add(2, "days").format("YYYY-MM-DD HH:mm:ss");
@@ -90,11 +90,12 @@ const SalesOrderBeras = ({ navigation }) => {
   }, [todos]);
 
   useEffect(() => {
-    // console.log("abc");
-    if (additional === null) {
+    console.log("additional", additional);
+    console.log("product list", listProductAvailable);
+    if ((additional === null) | (listProductAvailable.count === 0)) {
       getLokasi();
     }
-  }, [additional]);
+  }, [additional, listProductAvailable]);
 
   useEffect(() => {
     // if (lokasi !== null && additional !== null) {
@@ -355,6 +356,7 @@ const SalesOrderBeras = ({ navigation }) => {
   };
 
   const addTodo = () => {
+    // console.log("master barang", listProductAvailable);
     if (lokasi.locationid === null) {
       Alert.alert(
         "Error",
@@ -726,15 +728,10 @@ const SalesOrderBeras = ({ navigation }) => {
         setLokasi(res);
       }
     });
-    console.log("lokasi temp :", lokasitemp);
     if (lokasitemp.locationid !== null) {
       await GetDataLocal("additional").then(async (res1) => {
-        // console.log("tes res", res1);
         if (res1 !== null) {
-          // console.log("bajing", res1.length);
-          // if (res1.length > 0) {
           setAdditional(res1);
-          // console.log("additional", res1);
 
           axios
             .all([
@@ -818,7 +815,6 @@ const SalesOrderBeras = ({ navigation }) => {
                         listPrice.data.WindowTabData.DataSet.DataRow[i]
                           .field[10].val,
                     });
-                    // console.log("hasil mapping", product);
                   }
                 }
 
@@ -859,13 +855,16 @@ const SalesOrderBeras = ({ navigation }) => {
   const getSuggestions = useCallback(
     async (q) => {
       const filterToken = q.toLowerCase();
-      // console.log("getSuggestions", q);
+      console.log("brengsek", additional);
+      console.log("getSuggestions", q);
       if (typeof q !== "string" || q.length < 3) {
         setSuggestionsList(null);
+
         return;
       }
       setLoading(true);
       // const response = await fetch(constants.loginServer + "/getproductfg");
+      console.log("product tersedia", listProductAvailable);
       const items = listProductAvailable;
       // console.log("item cari", listProductAvailable);
       const suggestions = items
@@ -1282,6 +1281,7 @@ const SalesOrderBeras = ({ navigation }) => {
     setUomId(null);
     setStock("0");
     setHarga("0");
+    setTextInput("");
   };
 
   const ListItem = ({ todo }) => {
@@ -1669,7 +1669,7 @@ const SalesOrderBeras = ({ navigation }) => {
               Platform.select({ ios: { zIndex: 100 } }),
             ]}
           >
-            <AutocompleteDropdown
+            {/* <AutocompleteDropdown
               ref={searchRef}
               controller={(controller) => {
                 dropdownController.current = controller;
@@ -1734,6 +1734,25 @@ const SalesOrderBeras = ({ navigation }) => {
               showChevron={false}
               closeOnBlur={false}
               //  showClear={false}
+            /> */}
+
+            <AutocompleteDropdown
+              clearOnFocus={true}
+              closeOnBlur={false}
+              onSelectItem={(item) => {
+                // item && console.log("pilih", item);
+                item && setSelectedItem(item.id);
+                item && setSelectedItemCat(item.category);
+                item && setTextInput(item.title);
+                item && setHarga(NumberFormat(item.price.toString()));
+                item && setWeight(item.weight);
+                item && setIdempId(item.idempid);
+                item && setCategoriItem(item.category);
+                item && setSelectedMeasure(item.uomname);
+                item && setUomId(item.uomid);
+              }}
+              dataSet={listProductAvailable}
+              onClear={cleardata}
             />
           </View>
           <Text style={{ color: "#668", fontSize: 13 }}>

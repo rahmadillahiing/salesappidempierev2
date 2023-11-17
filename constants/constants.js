@@ -48,6 +48,7 @@ const screens = {
   search: "Survey Harga",
   cart: "Kompetitor",
   favourite: "Sales Survey",
+  notification: "Notification",
 };
 
 const bottom_tabs = [
@@ -67,10 +68,10 @@ const bottom_tabs = [
     id: 3,
     label: screens.favourite,
   },
-  // {
-  //   id: 4,
-  //   label: screens.notification,
-  // },
+  {
+    id: 4,
+    label: screens.notification,
+  },
 ];
 
 const kelamin = [

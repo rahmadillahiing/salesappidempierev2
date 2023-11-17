@@ -91,16 +91,19 @@ const InvoiceEditHeader = ({ navigation }) => {
         value: constants.gagaltagih[i].value,
       });
     }
-    // console.log("abc", dataGagalTagih);
     setDataGagalKunjungan(dataGagalTagih);
   };
 
   function onPressRadioButton(radioButtonsArray) {
-    let filteredResult = radioButtonsArray.find((e) => e.selected === true);
+    let filteredResult = dataGagalKunjungan.find(
+      (e) => e.id == radioButtonsArray
+    );
+    // console.log("tes", filteredResult);
+    setGagalKunjung(filteredResult);
 
-    // console.log("data pilih", filteredResult.value);
-    setGagalKunjung(filteredResult.value);
-    filteredResult.id === 4
+    console.log("data pilih", radioButtonsArray);
+
+    radioButtonsArray === 4
       ? (setDtVisible(true), setSelectedTgl(null))
       : setDtVisible(false);
   }
@@ -158,7 +161,7 @@ const InvoiceEditHeader = ({ navigation }) => {
       return;
     }
     if (
-      gagalKunjung ===
+      gagalKunjung.value ===
         "Janji bayar kunjungan berikutnya                         " &&
       selectedTgl === null
     ) {
@@ -193,8 +196,8 @@ const InvoiceEditHeader = ({ navigation }) => {
                   nik: profile.id,
                   paymentnote:
                     selectedTgl === null
-                      ? gagalKunjung.replace(/^\s+|\s+$/gm, "")
-                      : gagalKunjung.replace(/^\s+|\s+$/gm, "") +
+                      ? gagalKunjung.value.replace(/^\s+|\s+$/gm, "")
+                      : gagalKunjung.value.replace(/^\s+|\s+$/gm, "") +
                         ` ${moment(selectedTgl)
                           .format("DD-MM-YYYY")
                           .toString()}`,
@@ -262,6 +265,7 @@ const InvoiceEditHeader = ({ navigation }) => {
             <RadioGroup
               radioButtons={dataGagalKunjungan}
               onPress={onPressRadioButton}
+              selectedId={gagalKunjung.id}
               layout="column"
             />
             {dtVisible === true ? (

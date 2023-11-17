@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import registerNNPushToken from "native-notify";
 
 import CustomDrawer from "./navigation/CustomDrawer";
 
@@ -67,6 +68,13 @@ const navTheme = {
     background: "transparent",
   },
 };
+
+function wrapClassHook(Component) {
+  return function WrappedComponent(props) {
+    registerNNPushToken(14362, "4PNVHYb5uMwyGEGOdZMaMc");
+    return <Component />;
+  };
+}
 
 const App = () => {
   const [loaded] = useFonts({
@@ -211,4 +219,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default wrapClassHook(App);

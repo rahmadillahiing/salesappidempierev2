@@ -525,7 +525,7 @@ const ProductSurvey = ({ navigation }) => {
             Platform.select({ ios: { zIndex: 100 } }),
           ]}
         >
-          <AutocompleteDropdown
+          {/* <AutocompleteDropdown
             ref={searchRef}
             controller={(controller) => {
               dropdownController.current = controller;
@@ -583,6 +583,18 @@ const ProductSurvey = ({ navigation }) => {
             inputHeight={50}
             showChevron={false}
             closeOnBlur={false}
+          /> */}
+          <AutocompleteDropdown
+            clearOnFocus={true}
+            closeOnBlur={false}
+            onSelectItem={(item) => {
+              //   item && console.log("pilih", item);
+              item && setSelectedItem(item.id);
+              item && setSelectedMeasure(item.uomname);
+              item && setTextInput(item.title);
+            }}
+            dataSet={listProductAvailable}
+            onClear={cleardata}
           />
         </View>
         <Text style={{ color: "#668", fontSize: 13 }}>

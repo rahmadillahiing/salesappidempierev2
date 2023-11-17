@@ -479,11 +479,11 @@ const ProductSurvey = (props) => {
               <>
                 <View
                   style={[
-                    { flex: 1, flexDirection: "row", alignItems: "center" },
+                    // { flex: 1, flexDirection: "row", alignItems: "center" },
                     Platform.select({ ios: { zIndex: 1 } }),
                   ]}
                 >
-                  <AutocompleteDropdown
+                  {/* <AutocompleteDropdown
                     ref={searchRef}
                     controller={(controller) => {
                       dropdownController.current = controller;
@@ -551,6 +551,20 @@ const ProductSurvey = (props) => {
                     showChevron={false}
                     closeOnBlur={false}
                     //  showClear={false}
+                  /> */}
+                  <AutocompleteDropdown
+                    clearOnFocus={true}
+                    closeOnBlur={false}
+                    onSelectItem={(item) => {
+                      item && setSelectedItem(item.id);
+                      item && setSelectedItemCat(item.category);
+                      item && setTextInput(item.title);
+                      item && setIdempId(item.idempid);
+                      item && setCategoriItem(item.title);
+                      item && setSelectedMeasure(item.uomname);
+                    }}
+                    dataSet={listProductAvailable}
+                    onClear={onClearPress}
                   />
                 </View>
                 <Text style={{ color: "#668", fontSize: 13 }}>

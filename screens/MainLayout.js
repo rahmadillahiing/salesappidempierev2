@@ -258,6 +258,21 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
       favouriteTabFlex.value = withTiming(1, { duration: 500 });
       favouriteTabColor.value = withTiming(COLORS.white, { duration: 500 });
     }
+
+    if (selectedTab == constants.screens.notification) {
+      flatListRef?.current?.scrollToIndex({
+        index: 4,
+        animated: false,
+      });
+
+      notificationTabFlex.value = withTiming(4, { duration: 500 });
+      notificationTabColor.value = withTiming(COLORS.primary, {
+        duration: 500,
+      });
+    } else {
+      notificationTabFlex.value = withTiming(1, { duration: 500 });
+      notificationTabColor.value = withTiming(COLORS.white, { duration: 500 });
+    }
   }, [selectedTab]);
 
   return (
@@ -344,9 +359,9 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
                   <ProductCompetitorSurvey />
                 )}
                 {item.label == constants.screens.favourite && <SalesSurvey />}
-                {/* {item.label == constants.screens.notification && (
+                {item.label == constants.screens.notification && (
                   <Notification />
-                )} */}
+                )}
               </View>
             );
           }}
@@ -426,14 +441,14 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
             onPress={() => setSelectedTab(constants.screens.favourite)}
           />
 
-          {/* <TabButton
+          <TabButton
             label={constants.screens.notification}
             icon={icons.notification}
             isFocused={selectedTab == constants.screens.notification}
             outerContainerStyle={notificationFlexStyle}
             innerContainerStyle={notificationColorStyle}
             onPress={() => setSelectedTab(constants.screens.notification)}
-          /> */}
+          />
         </View>
       </View>
     </Animated.View>

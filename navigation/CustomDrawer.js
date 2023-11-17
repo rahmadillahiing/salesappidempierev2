@@ -104,7 +104,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
       <View
         style={{
           flex: 1,
-          paddingHorizontal: SIZES.radius,
+          paddingHorizontal: SIZES.base,
         }}
       >
         {/* Profile */}

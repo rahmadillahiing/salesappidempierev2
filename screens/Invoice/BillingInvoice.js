@@ -48,7 +48,7 @@ const BillingInvoice = () => {
         console.log("error");
         return;
       }
-      // console.log("Data invoice", foundschedule);
+      console.log("Data invoice", foundschedule);
       setInvoice(foundschedule);
       setRefreshing(false);
     });
@@ -124,6 +124,7 @@ const BillingInvoice = () => {
               nourut: invoice.nourut,
               lokasi: lokasi.customer,
               nik: lokasi.nik,
+              invtotalall: invoice.totalinvtotalall,
             },
           })
         }
@@ -136,7 +137,21 @@ const BillingInvoice = () => {
               // textDecorationLine: todo?.completed ? "line-through" : "none",
             }}
           >
-            No Tagihan : {invoice?.invnumber}
+            No Invoice : {invoice?.invnumber}
+          </Text>
+
+          <Text
+            style={{
+              // fontWeight: "bold",
+              fontSize: 14,
+              color: "#1f145c",
+              // textDecorationLine: todo?.completed ? "line-through" : "none",
+              alignItems: "flex-end",
+              alignContent: "flex-end",
+            }}
+          >
+            Nilai Invoice : Rp.
+            {NumberFormat(invoice?.totalinvtotalall.toString())}
           </Text>
 
           <Text

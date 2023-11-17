@@ -460,6 +460,19 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
               {detailItem?.invnumber}
             </Text>
           </View>
+
+          <Text
+            style={{
+              color: COLORS.darkGray,
+              ...FONTS.body3,
+              textAlign: "right",
+            }}
+          >
+            {`Nilai Invoice Rp. ${NumberFormat(
+              String(detailItem.invtotalall)
+            )}`}
+          </Text>
+
           <Text
             style={{
               color: COLORS.darkGray,

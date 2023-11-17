@@ -1019,7 +1019,7 @@ const Retur = ({ navigation }) => {
               Product Raja
             </Text>
 
-            <AutocompleteDropdown
+            {/* <AutocompleteDropdown
               ref={searchRef}
               controller={(controller) => {
                 dropdownController.current = controller;
@@ -1083,6 +1083,19 @@ const Retur = ({ navigation }) => {
               showChevron={false}
               closeOnBlur={false}
               //  showClear={false}
+            /> */}
+            <AutocompleteDropdown
+              clearOnFocus={true}
+              closeOnBlur={false}
+              onSelectItem={(item) => {
+                item && setSelectedItem(item.id);
+                item && setTextInput(item.title);
+                item && setIdempId(item.idempid);
+                item && setSelectedMeasure(item.uomname);
+                item && setUomId(item.uomid);
+              }}
+              dataSet={listProductAvailable}
+              onClear={cleardata}
             />
             <Text style={{ color: "#668", fontSize: 13 }}>
               produk id: {selectedItem}

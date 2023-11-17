@@ -78,14 +78,14 @@ const CheckIn = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
-    // console.log("permission", isGetLocation);
+    console.log("permission", isGetLocation);
     if (isGetLocation == false) {
       checkInOut();
       getUser();
       // console.log("tes lokasi", profile.id);
     }
 
-    // console.log("testing lokasi", location);
+    console.log("testing lokasi", location);
   }, [dt]);
 
   // useEffect(() => {
@@ -284,7 +284,16 @@ const CheckIn = ({ navigation }) => {
         // persistLocationRmp({ valuelokasiIdempCode });
 
         Alert.alert("Data succesfully saved", "", [
-          { text: "Okay", onPress: () => navigation.goBack() },
+          {
+            text: "Okay",
+            onPress: () => {
+              if (canGoBack()) {
+                goBack();
+              } else {
+                navigate("Home");
+              }
+            },
+          },
         ]);
         setIsLoading(false);
       }
@@ -389,14 +398,14 @@ const CheckIn = ({ navigation }) => {
             serviceType: "getCustomers",
             DataRow: {
               field: [
-                // {
-                //   "@column": "C_SalesRegion_ID",
-                //   val: result.region,
-                // },
                 {
-                  "@column": "SalesRep_ID",
-                  val: result.salesrep,
+                  "@column": "C_SalesRegion_ID",
+                  val: result.region,
                 },
+                // {
+                //   "@column": "SalesRep_ID",
+                //   val: result.salesrep,
+                // },
               ],
             },
           },
@@ -442,8 +451,9 @@ const CheckIn = ({ navigation }) => {
 
   const checkInOut = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log("status", status);
+
     if (status !== "granted") {
-      // console.log("status", status);
       setErrorMsg("Permission to access location was denied");
       return;
     }
@@ -455,10 +465,10 @@ const CheckIn = ({ navigation }) => {
     setLatitude(JSON.stringify(coords.latitude));
     setLongitude(JSON.stringify(coords.longitude));
 
-    // console.log(
-    //   "location",
-    //   JSON.stringify(coords.latitude + "," + coords.longitude)
-    // );
+    console.log(
+      "location",
+      JSON.stringify(coords.latitude + "," + coords.longitude)
+    );
 
     if (coords) {
       const { latitude, longitude } = coords;
@@ -467,7 +477,7 @@ const CheckIn = ({ navigation }) => {
         latitude,
         longitude,
       });
-      // console.log("lokasi", lokasi);
+      console.log("lokasi", lokasi);
       setIsGetLocation(true);
       for (let item of lokasi) {
         let address = `${item.district}, ${item.city}, ${item.region}, ${item.postalCode}`;

@@ -327,11 +327,6 @@ const CustomerSurvey = ({ navigation }) => {
     }
   };
 
-  function getUsaha() {
-    setRadioButtonsUsaha(constants.tempatUsaha);
-    // console.log("isinya", radioButtonsUsaha);
-  }
-
   const custTypeToko = async () => {
     // const url = constants.loginServer + `/getcusttype?filter=`;
     // // console.log("url", url);
@@ -1034,13 +1029,13 @@ const CustomerSurvey = ({ navigation }) => {
                                       : kelurahanInv.id,
                                   cp: cp,
                                   cpnohp: phoneNoCpPenagihan,
-                                  tempatusaha: tempatUsaha,
-                                  kepemilikan: kepemilikan,
+                                  tempatusaha: tempatUsaha.value,
+                                  kepemilikan: kepemilikan.value,
                                   mulaiusaha:
                                     usahaStart == null
                                       ? usahaStart
                                       : moment(usahaStart).format("YYYY-MM-DD"),
-                                  jumlahkaryawan: jumlahKaryawan,
+                                  jumlahkaryawan: jumlahKaryawan.value,
                                   omset: Number.parseFloat(
                                     omset.replace(/,/g, "")
                                   ),
@@ -1048,7 +1043,7 @@ const CustomerSurvey = ({ navigation }) => {
                                     creditLimit.replace(/,/g, "")
                                   ),
                                   top: termPayment.value,
-                                  payment: caraBayar,
+                                  payment: caraBayar.value,
                                   cppenagihan: cpPenagihan,
                                   cppenagihanhp: phoneNoCpPenagihan,
                                   telpcust: custNo,
@@ -1245,29 +1240,33 @@ const CustomerSurvey = ({ navigation }) => {
   }
 
   function onPressRadioButton(radioButtonsArray) {
-    let filteredResult = radioButtonsArray.find((e) => e.selected === true);
+    let filteredResult = dataTempatUsaha.find((e) => e.id == radioButtonsArray);
 
-    setTempatUsaha(filteredResult.value);
+    console.log("tempat usaha", filteredResult.value);
+    setTempatUsaha(filteredResult);
   }
 
   function onRadioButtonOwnerPress(radioKepemilikanArray) {
-    let filteredResult1 = radioKepemilikanArray.find(
-      (e) => e.selected === true
+    let filteredResult1 = dataKepemilikan.find(
+      (e) => e.id === radioKepemilikanArray
     );
-
-    setKepemilikan(filteredResult1.value);
+    console.log("tempat usaha", filteredResult1);
+    setKepemilikan(filteredResult1);
   }
 
   function onRadioButtonKaryawanPress(radioKaryawanArray) {
-    let filteredResult2 = radioKaryawanArray.find((e) => e.selected === true);
-
-    setJumlahKaryawan(filteredResult2.value);
+    let filteredResult2 = dataKaryawan.find((e) => e.id === radioKaryawanArray);
+    console.log("data karyawan", filteredResult2);
+    setJumlahKaryawan(filteredResult2);
   }
 
   function onRadioButtonCaraBayarPress(radioCaraBayarArray) {
-    let filteredResult3 = radioCaraBayarArray.find((e) => e.selected === true);
+    let filteredResult3 = dataPembayaran.find(
+      (e) => e.id === radioCaraBayarArray
+    );
+    console.log("cara bayar", filteredResult3);
 
-    setCaraBayar(filteredResult3.value);
+    setCaraBayar(filteredResult3);
   }
 
   // const onRadioButtonPress = (text) => {
@@ -1759,6 +1758,7 @@ const CustomerSurvey = ({ navigation }) => {
         <RadioGroup
           radioButtons={dataTempatUsaha}
           onPress={onPressRadioButton}
+          selectedId={tempatUsaha.id}
           layout="row"
         />
         {/* <RadioButtonContainer
@@ -1780,6 +1780,7 @@ const CustomerSurvey = ({ navigation }) => {
         <RadioGroup
           radioButtons={dataKepemilikan}
           onPress={onRadioButtonOwnerPress}
+          selectedId={kepemilikan.id}
           layout="row"
           selected={false}
         />
@@ -1822,6 +1823,7 @@ const CustomerSurvey = ({ navigation }) => {
           <RadioGroup
             radioButtons={dataKaryawan}
             onPress={onRadioButtonKaryawanPress}
+            selectedId={jumlahKaryawan.id}
             layout="column"
           />
         </View>
@@ -1904,7 +1906,7 @@ const CustomerSurvey = ({ navigation }) => {
           <RadioGroup
             radioButtons={dataPembayaran}
             onPress={onRadioButtonCaraBayarPress}
-            value={caraBayar}
+            selectedId={caraBayar.id}
             layout="row"
           />
         </View>
