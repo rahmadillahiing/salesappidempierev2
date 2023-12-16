@@ -29,9 +29,6 @@ import Home from "./Home/Home";
 import ProductSurvey from "./Survey/ProductSurvey";
 import ProductCompetitorSurvey from "./Survey/ProductCompetitorSurvey";
 
-import Search from "./Search/Search";
-import CartTab from "./Cart/CartTab";
-import Favourite from "./Favourite/Favourite";
 import Notification from "./Notification/Notification";
 
 import Header from "../components/Header";
@@ -359,9 +356,9 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
                   <ProductCompetitorSurvey />
                 )}
                 {item.label == constants.screens.favourite && <SalesSurvey />}
-                {item.label == constants.screens.notification && (
+                {/* {item.label == constants.screens.notification && (
                   <Notification />
-                )}
+                )} */}
               </View>
             );
           }}
@@ -441,14 +438,14 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
             onPress={() => setSelectedTab(constants.screens.favourite)}
           />
 
-          <TabButton
+          {/* <TabButton
             label={constants.screens.notification}
             icon={icons.notification}
             isFocused={selectedTab == constants.screens.notification}
             outerContainerStyle={notificationFlexStyle}
             innerContainerStyle={notificationColorStyle}
             onPress={() => setSelectedTab(constants.screens.notification)}
-          />
+          /> */}
         </View>
       </View>
     </Animated.View>

@@ -72,7 +72,10 @@ const SignIn = ({ navigation }) => {
         },
       }
     );
-    // console.log("login response status", response.data.WindowTabData);
+    console.log(
+      "login response status",
+      response.data.WindowTabData.DataSet.DataRow
+    );
 
     if (response.status == 200) {
       if (response.data.WindowTabData.RowCount > 0) {
@@ -85,7 +88,10 @@ const SignIn = ({ navigation }) => {
           whid: response.data.WindowTabData.DataSet.DataRow.field[4].val,
           pass: response.data.WindowTabData.DataSet.DataRow.field[5].val,
           region: response.data.WindowTabData.DataSet.DataRow.field[6].val,
+          jobid: response.data.WindowTabData.DataSet.DataRow.field[8].val,
+          jobtitle: response.data.WindowTabData.DataSet.DataRow.field[9].val,
         };
+        // console.log("data simpan", data);
         persistLogin({ ...data }, message, response.status);
         navigation.replace("Home");
       } else {

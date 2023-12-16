@@ -32,8 +32,10 @@ const ProductCompetitorSurvey = (props) => {
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const dropdownController = useRef(null);
+  // const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedProductItem, setSelectedProductItem] = useState("");
+
+  // const dropdownController = useRef(null);
 
   const searchRef = useRef(null);
 
@@ -88,7 +90,8 @@ const ProductCompetitorSurvey = (props) => {
 
   const onClearPress = useCallback(() => {
     setSuggestionsList(null);
-    setSelectedItem(null);
+    // setSelectedItem(null);
+    setSelectedProductItem("");
   }, []);
 
   const onOpenSuggestionsList = useCallback((isOpened) => {}, []);
@@ -116,11 +119,8 @@ const ProductCompetitorSurvey = (props) => {
       }
     }
 
-    if (selectedItem == null) {
-      Alert.alert(
-        "Warning",
-        "pilih salah satu product yang tersedia terlebih dahulu"
-      );
+    if (selectedProductItem == "") {
+      Alert.alert("Warning", "Isi Nama Product Terlebih Dahulu");
       return;
     }
 
@@ -142,7 +142,7 @@ const ProductCompetitorSurvey = (props) => {
                 body: JSON.stringify({
                   tanggal: lokasi.tanggal,
                   lokasiid: lokasi.locationid,
-                  prodid: selectedItem,
+                  prodid: selectedProductItem,
                   nik: lokasi.nik,
                   harga: Number.parseFloat(harga.replace(/,/g, "")),
                   periodeawal:
@@ -205,7 +205,8 @@ const ProductCompetitorSurvey = (props) => {
     setHarga("0");
     setPeriodeAwal(null);
     setPeriodeAkhir(null);
-    setSelectedItem(null);
+    // setSelectedItem(null);
+    setSelectedProductItem("");
     setSuggestionsList(null);
   };
 
@@ -214,6 +215,13 @@ const ProductCompetitorSurvey = (props) => {
       harga = "0";
     }
     setHarga(NumberFormat(harga));
+  };
+
+  const onChangeTextProduct = (product) => {
+    if (product === "" || product.length == 0) {
+      product = "";
+    }
+    setSelectedProductItem(product.replace("'", "`"));
   };
 
   return (
@@ -242,15 +250,15 @@ const ProductCompetitorSurvey = (props) => {
                 {lokasi == null ? "Belum Melakukan Check in" : lokasi.customer}
               </Text>
 
-              <Text style={styles.sectionTitle}>Product Kompetitor</Text>
+              {/* <Text style={styles.sectionTitle}>Product Kompetitor</Text> */}
               <>
-                <View
+                {/* <View
                   style={[
                     // { flex: 1, flexDirection: "row", alignItems: "center" },
                     Platform.select({ ios: { zIndex: 1 } }),
                   ]}
-                >
-                  <AutocompleteDropdown
+                > */}
+                {/* <AutocompleteDropdown
                     ref={searchRef}
                     controller={(controller) => {
                       dropdownController.current = controller;
@@ -308,11 +316,11 @@ const ProductCompetitorSurvey = (props) => {
                     showChevron={false}
                     closeOnBlur={false}
                     //  showClear={false}
-                  />
-                </View>
-                <Text style={{ color: "#668", fontSize: 13 }}>
+                  /> */}
+                {/* </View> */}
+                {/* <Text style={{ color: "#668", fontSize: 13 }}>
                   produk id: {selectedItem}
-                </Text>
+                </Text> */}
               </>
             </View>
           </View>
@@ -325,6 +333,14 @@ const ProductCompetitorSurvey = (props) => {
               marginTop: -50,
             }}
           >
+            <FormInput
+              label="Input Nama Product"
+              value={selectedProductItem}
+              onChange={onChangeTextProduct}
+              inputContainerStyle={{
+                backgroundColor: COLORS.white,
+              }}
+            />
             {/* Harga */}
             <FormInput
               label="Harga"

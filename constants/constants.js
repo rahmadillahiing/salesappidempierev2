@@ -1,15 +1,17 @@
 //BPR
 //production
-const idempServerBpr = "http://108.137.95.190:8080/";
+// const idempServerBpr = "http://108.137.95.190:8080/";
+// const idempServerBpr = "https://ibpr.sep-food.com/";
 //staging
-// const idempServerBpr = "http://202.158.42.132:8090/";
+const idempServerBpr = "http://202.158.42.132:8080/";
+// const idempServerBpr = "https://stagingbpr.sep-food.com/";
 //Dev
-// const idempServerBpr = "http://202.158.42.131:8443/";
+// const idempServerBpr = "http://202.158.42.131:8080/";
 
 //RMP
-//live
+////live
 const idempServerRmp = "http://108.137.95.190:9090/";
-//Dev
+////Dev
 // const idempServerRmp = "http://103.94.127.82:9999/";
 
 //bpr production internal aws
@@ -510,7 +512,7 @@ const state = [
   },
 ];
 
-const GOOGLE_MAP_API_KEY = "[Your Google API Key]";
+const GOOGLE_MAP_API_KEY = "AIzaSyAWZL74mSlqw9FdWx1cHFkhsKLfDildtJY";
 
 export default {
   idempServerBpr,

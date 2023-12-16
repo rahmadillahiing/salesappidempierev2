@@ -36,8 +36,9 @@ const CustomerSurvey = ({ navigation }) => {
   const [dataKepemilikan, setDatakepemilikan] = useState([]);
   const [dataKaryawan, setDataKaryawan] = useState([]);
   const [dataPembayaran, setDataPembayaran] = useState([]);
+  const [dataChannel, setDataChannel] = useState([]);
+  const [dataTerm, setDataTerm] = useState([]);
 
-  const [radioButtonsUsaha, setRadioButtonsUsaha] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -86,6 +87,7 @@ const CustomerSurvey = ({ navigation }) => {
   const [caraBayar, setCaraBayar] = useState("");
   const [creditLimit, setCreditLimit] = useState("0");
   const [custType, setCustType] = useState("");
+  const [channelType, setChannelType] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [cpPenagihan, setCpPenagihan] = useState("");
@@ -102,8 +104,8 @@ const CustomerSurvey = ({ navigation }) => {
   );
 
   useEffect(() => {
-    clearData();
-
+    // clearData();
+    getTerm();
     getTempatUsaha();
     getKepemilikan();
     getKaryawan();
@@ -113,6 +115,7 @@ const CustomerSurvey = ({ navigation }) => {
     getNewLocation();
     getProvinsi();
     custTypeToko();
+    custChannel();
   }, []);
 
   useEffect(() => {
@@ -328,35 +331,6 @@ const CustomerSurvey = ({ navigation }) => {
   };
 
   const custTypeToko = async () => {
-    // const url = constants.loginServer + `/getcusttype?filter=`;
-    // // console.log("url", url);
-    // fetch(url).then(async (response) => {
-    //   const isJson = response.headers
-    //     .get("content-type")
-    //     ?.includes("application/json");
-    //   const foundtypetoko = isJson && (await response.json());
-
-    //   if (!response.ok) {
-    //     // get error message from body or default to response status
-    //     // const error = (data && data.message) || response.status;
-    //     // return Promise.reject(error);
-    //     console.log("error");
-    //     return;
-    //   }
-
-    //   let datatypetoko = [];
-    //   const count = foundtypetoko.length;
-
-    //   for (var i = 0; i < count; i++) {
-    //     datatypetoko.push({
-    //       id: foundtypetoko[i].id,
-    //       label: foundtypetoko[i].label.toString(),
-    //       value: foundtypetoko[i].value,
-    //     });
-    //   }
-    //   // console.log("API kecamatan :", dataKel);
-    //   setDataCustType(datatypetoko);
-    // });
     const response = await axios.post(
       constants.idempServerBpr +
         "ADInterface/services/rest/model_adservice/query_data",
@@ -424,6 +398,112 @@ const CustomerSurvey = ({ navigation }) => {
     //   }
     //   // console.log("API kecamatan :", dataKel);
     //   setDataCustType(datatypetoko);
+  };
+
+  const custChannel = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getChannelBP",
+            DataRow: {
+              field: [
+                {
+                  "@column": "IsActive",
+                  val: "Y",
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
+      }
+    );
+
+    // console.log("response", response.data.WindowTabData.Success);
+    if (!response.data.WindowTabData.Success === true) {
+      // get error message from body or default to response status
+      // const error = (data && data.message) || response.status;
+      // return Promise.reject(error);
+      console.log("error getting Channel");
+      return;
+    }
+
+    const count = response.data.WindowTabData.RowCount;
+    let datachannel = [];
+
+    for (var i = 0; i < count; i++) {
+      datachannel.push({
+        id: response.data.WindowTabData.DataSet.DataRow[i].field[2].val,
+        label:
+          response.data.WindowTabData.DataSet.DataRow[
+            i
+          ].field[3].val.toString(),
+        value: response.data.WindowTabData.DataSet.DataRow[i].field[3].val,
+      });
+    }
+    // console.log("data channel", datachannel);
+    setDataChannel(datachannel);
+  };
+
+  const getTerm = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getPaymentTerm",
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
+      }
+    );
+
+    // console.log("response", response.data.WindowTabData.Success);
+    if (!response.data.WindowTabData.Success === true) {
+      // get error message from body or default to response status
+      // const error = (data && data.message) || response.status;
+      // return Promise.reject(error);
+      console.log("error getting Term");
+      return;
+    }
+
+    const count = response.data.WindowTabData.RowCount;
+    let dataTerm = [];
+
+    for (var i = 0; i < count; i++) {
+      dataTerm.push({
+        id: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+        label:
+          response.data.WindowTabData.DataSet.DataRow[
+            i
+          ].field[1].val.toString(),
+        value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+      });
+    }
+    console.log("data term", dataTerm);
+    setDataTerm(dataTerm);
   };
 
   const getKelurahan = () => {
@@ -702,7 +782,12 @@ const CustomerSurvey = ({ navigation }) => {
     }
 
     if (custTypeToko === "") {
-      Alert.alert("Warning", "Pilih Jenis Channel terlebih dahulu");
+      Alert.alert("Warning", "Pilih Group customer terlebih dahulu");
+      return;
+    }
+
+    if (channelType === "") {
+      Alert.alert("Warning", "Pilih Type Channel terlebih dahulu");
       return;
     }
 
@@ -901,7 +986,7 @@ const CustomerSurvey = ({ navigation }) => {
 
             try {
               const response = fetch(
-                constants.loginServer + "/upload",
+                constants.loginServer + "/uploads1",
                 config
               ).then(async (response) => {
                 const isJson = response.headers
@@ -909,9 +994,10 @@ const CustomerSurvey = ({ navigation }) => {
                   ?.includes("application/json");
                 const hasil1 = isJson && (await response.json());
                 const pathSave = hasil1[0].path;
+                console.log("save path 1", pathSave);
                 if (pathSave !== "undefined") {
                   const response2 = fetch(
-                    constants.loginServer + "/upload",
+                    constants.loginServer + "/uploads1",
                     config2
                   ).then(async (response2) => {
                     const isJson2 = response2.headers
@@ -921,7 +1007,7 @@ const CustomerSurvey = ({ navigation }) => {
                     const pathSave2 = hasil2[0].path;
                     if (pathSave2 !== "undefined") {
                       const response3 = fetch(
-                        constants.loginServer + "/upload",
+                        constants.loginServer + "/uploads1",
                         config3
                       ).then(async (response3) => {
                         const isJson3 = response3.headers
@@ -931,7 +1017,7 @@ const CustomerSurvey = ({ navigation }) => {
                         const pathSave3 = hasil3[0].path;
                         if (pathSave3 !== "undefined") {
                           const response4 = fetch(
-                            constants.loginServer + "/upload",
+                            constants.loginServer + "/uploads1",
                             config4
                           ).then(async (response4) => {
                             const isJson4 = response4.headers
@@ -1047,9 +1133,10 @@ const CustomerSurvey = ({ navigation }) => {
                                   cppenagihan: cpPenagihan,
                                   cppenagihanhp: phoneNoCpPenagihan,
                                   telpcust: custNo,
+                                  channel2: channelType.id,
                                 }),
                               };
-                              // console.log("new customer", requestOptions);
+                              console.log("new customer", requestOptions);
                               const url =
                                 constants.loginServer + "/insertnewcustomer ";
                               fetch(url, requestOptions).then(
@@ -1314,9 +1401,9 @@ const CustomerSurvey = ({ navigation }) => {
 
         {/* Jenis Toko */}
         <FormPicker
-          label="Jenis Channel"
-          placeholder="Pilih Jenis Channel"
-          modalTitle="Pilih Jenis Channel"
+          label="Customer Group"
+          placeholder="Pilih Customer Group"
+          modalTitle="Pilih Customer Group"
           value={custType.label}
           setValue={setCustType}
           options={dataCustType}
@@ -1325,6 +1412,25 @@ const CustomerSurvey = ({ navigation }) => {
           }}
           inputContainerStyle={{
             backgroundColor: COLORS.white,
+          }}
+        />
+
+        {/* Jenis Channel */}
+        <FormPicker
+          label="Customer Channel"
+          placeholder="Pilih Customer Channel"
+          modalTitle="Pilih Customer Channel"
+          value={channelType.label}
+          setValue={setChannelType}
+          options={dataChannel}
+          containerStyle={{
+            marginTop: SIZES.radius,
+          }}
+          inputContainerStyle={{
+            backgroundColor: COLORS.white,
+          }}
+          modalStyle={{
+            height: 700,
           }}
         />
 
@@ -1348,6 +1454,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Company name */}
         <FormInput
           label="Nama Customer"
+          autoCapitalize="characters"
           value={companyName}
           onChange={(value) => {
             setCompanyName(value);
@@ -1379,6 +1486,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Name owner*/}
         <FormInput
           label="Nama Pemilik"
+          autoCapitalize="characters"
           value={fullName}
           onChange={(value) => {
             setFullName(value);
@@ -1454,6 +1562,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Nama KTP */}
         <FormInput
           label="Nama Sesuai KTP"
+          autoCapitalize="characters"
           value={ktpName}
           onChange={(value) => {
             setKtpName(value);
@@ -1483,6 +1592,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Nama npwp */}
         <FormInput
           label="Nama tercetak di NPWP"
+          autoCapitalize="characters"
           value={npwpName}
           onChange={(value) => {
             setNpwpName(value);
@@ -1498,6 +1608,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Email */}
         <FormInput
           label="Email"
+          autoCapitalize="characters"
           keyboardType="email-address"
           autoCompleteType="email"
           value={email}
@@ -1515,6 +1626,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Address */}
         <FormInput
           label="Alamat"
+          autoCapitalize="characters"
           value={addr}
           onChange={(value) => {
             setAddr(value);
@@ -1621,6 +1733,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Address inv */}
         <FormInput
           editable={!isChecked}
+          autoCapitalize="characters"
           label="Alamat Penagihan"
           value={addrInv}
           onChange={(value) => {
@@ -1630,7 +1743,7 @@ const CustomerSurvey = ({ navigation }) => {
             marginTop: SIZES.radius,
           }}
           inputContainerStyle={{
-            backgroundColor: COLORS.white,
+            backgroundColor: !isChecked ? COLORS.white : COLORS.darkGray2,
           }}
         />
         {/* Provinsi inv*/}
@@ -1646,7 +1759,7 @@ const CustomerSurvey = ({ navigation }) => {
             marginTop: SIZES.radius,
           }}
           inputContainerStyle={{
-            backgroundColor: COLORS.white,
+            backgroundColor: !isChecked ? COLORS.white : COLORS.darkGray2,
           }}
           modalStyle={{
             height: 250,
@@ -1666,7 +1779,7 @@ const CustomerSurvey = ({ navigation }) => {
             marginTop: SIZES.radius,
           }}
           inputContainerStyle={{
-            backgroundColor: COLORS.white,
+            backgroundColor: !isChecked ? COLORS.white : COLORS.darkGray2,
           }}
           modalStyle={{
             height: 250,
@@ -1686,7 +1799,7 @@ const CustomerSurvey = ({ navigation }) => {
             marginTop: SIZES.radius,
           }}
           inputContainerStyle={{
-            backgroundColor: COLORS.white,
+            backgroundColor: !isChecked ? COLORS.white : COLORS.darkGray2,
           }}
           modalStyle={{
             height: 250,
@@ -1706,7 +1819,7 @@ const CustomerSurvey = ({ navigation }) => {
             marginTop: SIZES.radius,
           }}
           inputContainerStyle={{
-            backgroundColor: COLORS.white,
+            backgroundColor: !isChecked ? COLORS.white : COLORS.darkGray2,
           }}
           modalStyle={{
             height: 250,
@@ -1716,6 +1829,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Name CP */}
         <FormInput
           label="Contact person"
+          autoCapitalize="characters"
           value={cp}
           onChange={(value) => {
             setCp(value);
@@ -1872,20 +1986,20 @@ const CustomerSurvey = ({ navigation }) => {
         />
 
         {/* TOP */}
-        <FormPicker
+        {/* <FormPicker
           label="Term of payment"
           placeholder="Pilih masa pembayaran"
           modalTitle="Pilih TOP"
-          value={termPayment.value}
+          value={dataTerm.label}
           setValue={setTermPayment}
-          options={constants.TOP}
+          options={dataTerm}
           containerStyle={{
             marginTop: SIZES.radius,
           }}
           inputContainerStyle={{
             backgroundColor: COLORS.white,
           }}
-        />
+        /> */}
 
         {/* Cara Bayar */}
         <Text
@@ -1918,6 +2032,7 @@ const CustomerSurvey = ({ navigation }) => {
         {/* Name CP penagihan */}
         <FormInput
           label="Contact person penagihan"
+          autoCapitalize="characters"
           value={cpPenagihan}
           onChange={(value) => {
             setCpPenagihan(value);

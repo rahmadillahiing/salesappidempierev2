@@ -84,7 +84,7 @@ const OnBoarding = ({ navigation }) => {
   const getUser = () => {
     setIsLoading(true);
     GetDataLocal("user").then(async (res) => {
-      // console.log("getuser :", res);
+      console.log("getuser :", res);
       if (res !== null) {
         const response = await axios
           .post(

@@ -57,7 +57,7 @@ const CheckIn = ({ navigation }) => {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [isRemember, setIsRemember] = useState(true);
-  const [lokasiLain, setLokasiLain] = useState(null);
+  const [lokasiLain, setLokasiLain] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
   const [displayCurrentAddress, setDisplayCurrentAddress] = useState(
     "Wait, we are fetching your location..."
@@ -70,6 +70,8 @@ const CheckIn = ({ navigation }) => {
     salesrep: "",
     whid: "",
     region: "",
+    jobid: "",
+    jobtitle: "",
   });
 
   const [useCamera, setUseCamera] = useState(false);
@@ -78,14 +80,14 @@ const CheckIn = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
-    console.log("permission", isGetLocation);
+    // console.log("permission", isGetLocation);
     if (isGetLocation == false) {
       checkInOut();
       getUser();
       // console.log("tes lokasi", profile.id);
     }
 
-    console.log("testing lokasi", location);
+    // console.log("testing lokasi", location);
   }, [dt]);
 
   // useEffect(() => {
@@ -154,7 +156,7 @@ const CheckIn = ({ navigation }) => {
       return;
     }
 
-    if (valuelokasiIdempCode === null && lokasiLain === null) {
+    if (valuelokasiIdempCode === null && lokasiLain.trim() == "") {
       Alert.alert(
         "Invalid Data Lokasi",
         isRemember
@@ -560,7 +562,7 @@ const CheckIn = ({ navigation }) => {
                 isSelected={isRemember}
                 onPress={() => {
                   setIsRemember(true);
-                  setLokasiLain(null);
+                  setLokasiLain("");
                   setImage(null);
                 }}
               />

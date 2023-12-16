@@ -175,171 +175,201 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                 backgroundColor: COLORS.lightGray1,
               }}
             />
+            {profile.jobid != "1000008" ? (
+              <View>
+                <CustomDrawerItem
+                  label="Display before"
+                  icon={icons.boxes}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("ShelvingAwal");
+                  }}
+                />
+                <CustomDrawerItem
+                  label="Display After"
+                  icon={icons.rack}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("ShelvingSetelah");
+                  }}
+                />
+                <CustomDrawerItem
+                  label="Shelving & Floor"
+                  icon={icons.floor}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("ShelvingFloor");
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Display before"
-              icon={icons.boxes}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("ShelvingAwal");
-              }}
-            />
+                <CustomDrawerItem
+                  label="Cek Stock"
+                  icon={icons.box}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("StockSurvey");
+                  }}
+                />
+                <View
+                  style={{
+                    height: 1,
+                    marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
+                    marginLeft: SIZES.radius,
+                    backgroundColor: COLORS.lightGray1,
+                  }}
+                />
+              </View>
+            ) : (
+              ""
+            )}
 
-            <CustomDrawerItem
-              label="Display After"
-              icon={icons.rack}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("ShelvingSetelah");
-              }}
-            />
-
-            <CustomDrawerItem
-              label="Shelving & Floor"
-              icon={icons.floor}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("ShelvingFloor");
-              }}
-            />
-
-            <CustomDrawerItem
-              label="Cek Stock"
-              icon={icons.box}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("StockSurvey");
-              }}
-            />
-
-            <View
+            {/* <View
               style={{
                 height: 1,
                 marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
                 marginLeft: SIZES.radius,
                 backgroundColor: COLORS.lightGray1,
               }}
-            />
+            /> */}
+            {profile.jobid == "1000007" ? (
+              <View>
+                <CustomDrawerItem
+                  label="Input SO Beras"
+                  icon={icons.discount}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("salesorderBeras");
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Input SO Beras"
-              icon={icons.discount}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("salesorderBeras");
-              }}
-            />
+                <CustomDrawerItem
+                  label="Input Retur Beras"
+                  icon={icons.help}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("Retur");
+                  }}
+                />
+                <View
+                  style={{
+                    height: 1,
+                    marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
+                    marginLeft: SIZES.radius,
+                    backgroundColor: COLORS.lightGray1,
+                  }}
+                />
+              </View>
+            ) : (
+              ""
+            )}
 
-            <CustomDrawerItem
-              label="Input Retur Beras"
-              icon={icons.help}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("Retur");
-              }}
-            />
+            {profile.jobid != "1000006" ? (
+              <View>
+                <CustomDrawerItem
+                  label="Konfirmasi Invoice"
+                  icon={icons.globe}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("ConfirmInvoice");
+                  }}
+                />
 
-            <View
-              style={{
-                height: 1,
-                marginVertical: SIZES.height > 800 ? SIZES.radius : 0,
-                marginLeft: SIZES.radius,
-                backgroundColor: COLORS.lightGray1,
-              }}
-            />
+                <CustomDrawerItem
+                  label="Konfirmasi TTF"
+                  icon={icons.globe}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("ConfirmTtf");
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Konfirmasi Invoice"
-              icon={icons.globe}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("ConfirmInvoice");
-              }}
-            />
+                <CustomDrawerItem
+                  label="Invoice Kunjungan"
+                  icon={icons.term}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("BillingCustomer");
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Konfirmasi TTF"
-              icon={icons.globe}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("ConfirmTtf");
-              }}
-            />
+                <CustomDrawerItem
+                  label="Invoice Nonkunjungan"
+                  icon={icons.term}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("BillingInvoiceNonKunjungan");
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Invoice Kunjungan"
-              icon={icons.term}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("BillingCustomer");
-              }}
-            />
+                <CustomDrawerItem
+                  label="Invoice Status"
+                  icon={icons.term}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("InvoiceEditHeader");
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Invoice Nonkunjungan"
-              icon={icons.term}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("BillingInvoiceNonKunjungan");
-              }}
-            />
+                {/* Line Divider */}
+                <View
+                  style={{
+                    height: 1,
+                    marginVertical:
+                      SIZES.height > 800 ? SIZES.radius : SIZES.base,
+                    marginLeft: SIZES.radius,
+                    backgroundColor: COLORS.lightGray1,
+                  }}
+                />
+              </View>
+            ) : (
+              ""
+            )}
 
-            <CustomDrawerItem
-              label="Invoice Status"
-              icon={icons.term}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("InvoiceEditHeader");
-              }}
-            />
+            {profile.jobid == "1000007" ? (
+              <View>
+                <CustomDrawerItem
+                  label="Customer Baru"
+                  icon={icons.location}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("CustomerSurvey");
+                  }}
+                />
 
-            {/* Line Divider */}
-            <View
-              style={{
-                height: 1,
-                marginVertical: SIZES.height > 800 ? SIZES.radius : SIZES.base,
-                marginLeft: SIZES.radius,
-                backgroundColor: COLORS.lightGray1,
-              }}
-            />
+                {/* Line Divider */}
+                <View
+                  style={{
+                    height: 1,
+                    marginVertical:
+                      SIZES.height > 800 ? SIZES.radius : SIZES.base,
+                    marginLeft: SIZES.radius,
+                    backgroundColor: COLORS.lightGray1,
+                  }}
+                />
 
-            <CustomDrawerItem
-              label="Customer Baru"
-              icon={icons.location}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("CustomerSurvey");
-              }}
-            />
-
-            {/* Line Divider */}
-            <View
-              style={{
-                height: 1,
-                marginVertical: SIZES.height > 800 ? SIZES.radius : SIZES.base,
-                marginLeft: SIZES.radius,
-                backgroundColor: COLORS.lightGray1,
-              }}
-            />
-
-            <CustomDrawerItem
-              label="Monitoring SO"
-              icon={icons.globe}
-              onPress={() => {
-                navigation.closeDrawer();
-                navigation.navigate("MonitoringSo");
-              }}
-            />
+                <CustomDrawerItem
+                  label="Monitoring SO"
+                  icon={icons.globe}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("MonitoringSo");
+                  }}
+                />
+                <View
+                  style={{
+                    height: 1,
+                    marginVertical:
+                      SIZES.height > 800 ? SIZES.radius : SIZES.base,
+                    marginLeft: SIZES.radius,
+                    backgroundColor: COLORS.lightGray1,
+                  }}
+                />
+              </View>
+            ) : (
+              ""
+            )}
           </View>
           {/* Line Divider */}
-          <View
-            style={{
-              height: 1,
-              marginVertical: SIZES.height > 800 ? SIZES.radius : SIZES.base,
-              marginLeft: SIZES.radius,
-              backgroundColor: COLORS.lightGray1,
-            }}
-          />
 
           <View
             style={{
