@@ -1,4 +1,3 @@
-import Checkbox from "expo-checkbox";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -185,11 +184,13 @@ const InvoiceDetail = ({ navigation, route }) => {
   const takePicture = async () => {
     if (cameraRef) {
       // console.log("in take picture");
+      const camRatios = await cameraRef.current.getSupportedRatiosAsync();
       try {
         let photo = await cameraRef.current.takePictureAsync({
           skipProcessing: true,
-          allowsEditing: true,
-          aspect: [4, 3],
+          // allowsEditing: true,
+          // aspect: [4, 3],
+          ratio: camRatios,
           quality: 1,
         });
 
@@ -488,8 +489,8 @@ const InvoiceDetail = ({ navigation, route }) => {
           style={{
             marginTop: SIZES.padding,
             backgroundColor: COLORS.lightGray1,
-            padding: 5,
-            borderRadius: 10,
+            padding: 2,
+            borderRadius: 5,
             flex: 1,
             height: 150,
           }}

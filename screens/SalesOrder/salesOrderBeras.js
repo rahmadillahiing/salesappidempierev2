@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef, useState, useEffect } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -12,11 +12,8 @@ import {
   Image,
   TextInput,
   FlatList,
-  Dimensions,
   ActivityIndicator,
 } from "react-native";
-
-import { useFocusEffect } from "@react-navigation/native";
 
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 
@@ -51,13 +48,14 @@ const SalesOrderBeras = ({ navigation }) => {
   const [selectedMeasure, setSelectedMeasure] = useState(null);
   const [textInput, setTextInput] = useState("");
   const [idempid, setIdempId] = useState("");
+  const [noso, setNoso] = useState("");
   const [ongkosAngkut, setOngkosAngkut] = useState(0);
   const [loading, setLoading] = useState(false);
   const [oaYesNo, setOaYesNo] = useState(false);
   const [totalBerat, setTotalBerat] = useState(0);
-  const dropdownController = useRef(null);
+  // const dropdownController = useRef(null);
 
-  const searchRef = useRef(null);
+  // const searchRef = useRef(null);
   const flatListRef = useRef();
 
   const [stock, setStock] = useState("0");
@@ -67,12 +65,6 @@ const SalesOrderBeras = ({ navigation }) => {
   const [oatotal, setOaTotal] = useState(0);
 
   const [todos, setTodos] = useState([]);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     getLokasi();
-  //   }, [])
-  // );
 
   useEffect(() => {
     // let v = moment().add(2, "days").format("YYYY-MM-DD HH:mm:ss");
@@ -90,8 +82,8 @@ const SalesOrderBeras = ({ navigation }) => {
   }, [todos]);
 
   useEffect(() => {
-    console.log("additional", additional);
-    console.log("product list", listProductAvailable);
+    // console.log("additional", additional);
+    // console.log("product list", listProductAvailable);
     if ((additional === null) | (listProductAvailable.count === 0)) {
       getLokasi();
     }
@@ -213,6 +205,7 @@ const SalesOrderBeras = ({ navigation }) => {
   const getTodosFromUserDevice = async () => {
     try {
       const todo = await AsyncStorage.getItem("sales");
+      // console.log("todo", todo);
       if (todo != null) {
         let datahitung = JSON.parse(todo);
         let hitungtotal = 0;
@@ -220,11 +213,12 @@ const SalesOrderBeras = ({ navigation }) => {
         let hitungtotaladdcost = 0;
         let hitungtotalberat = 0;
 
-        // console.log("data hitung", datahitung);
         const count = datahitung.length;
         if (count > 0) {
           setOaYesNo(
-            datahitung.oa > 0 || datahitung.oa !== undefined ? true : false
+            datahitung[0].oa > 0 || datahitung[0].oa !== undefined
+              ? true
+              : false
           );
         }
         if (oaYesNo === true) {
@@ -271,7 +265,6 @@ const SalesOrderBeras = ({ navigation }) => {
   const saveTodoToUserDevice = async (todos) => {
     let totalhitung = 0;
     let totalhitungberat = 0;
-
     todos.forEach((obj) => {
       totalhitung =
         totalhitung +
@@ -289,9 +282,10 @@ const SalesOrderBeras = ({ navigation }) => {
 
     // console.log("todos sync", todos);
     try {
-      // console.log("yg disimpan", todos);
-      const stringifyTodos = JSON.stringify(todos);
-      await AsyncStorage.setItem("sales", stringifyTodos);
+      if (todos.length > 0) {
+        const stringifyTodos = JSON.stringify(todos);
+        await AsyncStorage.setItem("sales", stringifyTodos);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -419,27 +413,27 @@ const SalesOrderBeras = ({ navigation }) => {
               Number.parseFloat(obj.oa) +
             obj.qty * obj.weight * obj.addcost;
 
-          if (totalhitung1 > additional.clavailable) {
-            Alert.alert("Warning", "Transaksi melebihi Credit Limit");
-            return;
-          } else {
-            obj.qty = newStockItem;
-            obj.harga = Number.parseFloat(harga.replace(/,/g, ""));
+          // if (totalhitung1 > additional.clavailable) {
+          //   Alert.alert("Warning", "Transaksi melebihi Credit Limit");
+          //   return;
+          // } else {
+          obj.qty = newStockItem;
+          obj.harga = Number.parseFloat(harga.replace(/,/g, ""));
 
-            // totalhitungberat1 =
-            //   totalberat +
-            //   Number.parseFloat(newStockItem) * Number.parseFloat(obj.weight);
+          // totalhitungberat1 =
+          //   totalberat +
+          //   Number.parseFloat(newStockItem) * Number.parseFloat(obj.weight);
 
-            // setTotalBerat(totalhitungberat1);
-            // setTotal(totalhitung1);
-            // setTotalBerat(totalhitungberat1);
-            // cekAdditionalCost(totalhitungberat1);
-            AsyncStorage.removeItem("sales");
+          // setTotalBerat(totalhitungberat1);
+          // setTotal(totalhitung1);
+          // setTotalBerat(totalhitungberat1);
+          // cekAdditionalCost(totalhitungberat1);
+          AsyncStorage.removeItem("sales");
 
-            saveTodoToUserDevice(todos);
-            cleardata();
-            return;
-          }
+          saveTodoToUserDevice(todos);
+          cleardata();
+          return;
+          // }
         }
 
         // setTotal(totalhitung1);
@@ -487,34 +481,35 @@ const SalesOrderBeras = ({ navigation }) => {
 
         // console.log("total", totalhitung);
 
-        if (totalhitung > additional.clavailable) {
-          Alert.alert("Warning", "Transaksi melebihi Credit Limit");
-          return;
-        } else {
-          setTotal(totalhitung);
+        // if (totalhitung > additional.clavailable) {
+        //   Alert.alert("Warning", "Transaksi melebihi Credit Limit");
+        //   return;
+        // } else {
+        setTotal(totalhitung);
 
-          // cekAdditionalCost(totalhitungberat);
+        // cekAdditionalCost(totalhitungberat);
 
-          // setTotalBerat(totalhitungberat);
-          // console.log("total setelah", totalhitung);
-          const newTodo = {
-            id: selectedItem,
-            task: textInput,
-            qty: Number.parseFloat(stock.replace(/,/g, "")),
-            harga: Number.parseFloat(harga.replace(/,/g, "")),
-            weight: weight,
-            oa: oaYesNo === true ? ongkosAngkut : 0,
-            idempid: idempid,
-            addcost: pricebreak,
-            categori: categoriItem,
-            unit: selectedMeasure,
-            unitid: uomId,
-          };
+        // setTotalBerat(totalhitungberat);
+        // console.log("total setelah", totalhitung);
+        const newTodo = {
+          noso: noso,
+          id: selectedItem,
+          task: textInput,
+          qty: Number.parseFloat(stock.replace(/,/g, "")),
+          harga: Number.parseFloat(harga.replace(/,/g, "")),
+          weight: weight,
+          oa: oaYesNo === true ? ongkosAngkut : 0,
+          idempid: idempid,
+          addcost: pricebreak,
+          categori: categoriItem,
+          unit: selectedMeasure,
+          unitid: uomId,
+        };
 
-          // console.log("new add", newTodo);
+        console.log("new add", newTodo);
 
-          setTodos([...todos, newTodo]);
-        }
+        setTodos([...todos, newTodo]);
+        // }
 
         // console.log("hasil", todos);
         // InsertData(totalhitung);
@@ -683,6 +678,54 @@ const SalesOrderBeras = ({ navigation }) => {
     );
   }
 
+  function cekArCustomer(bpid) {
+    var config2 = {
+      method: "post",
+      url:
+        constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      data: {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getArPercustomer",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_BPartner_ID",
+                  val: bpid,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
+      },
+    };
+    // axios(config2).then(function async(response) {
+    //   console.log("total AR customer", response.data.WindowTabData.RowCount);
+    //   if (response.data.WindowTabData.RowCount > 0) {
+    //     Alert.alert(
+    //       "Informasi",
+    //       "Ada Invoice jatuh tempo, tidak bisa melakukan SO"
+    //     );
+    //     navigation.navigate("MainLayout");
+    //   }
+    // });
+  }
+
   async function getListPrice(data2) {
     // console.log("pricelist ID", data2);
     return await axios.post(
@@ -721,18 +764,34 @@ const SalesOrderBeras = ({ navigation }) => {
   }
 
   const getLokasi = async () => {
-    let lokasitemp = "";
+    var lokasitemp = "";
     await GetDataLocal("lokasi").then((res) => {
       if (res !== null) {
         lokasitemp = res;
+        console.log("lokasi awal", lokasitemp);
         setLokasi(res);
       }
     });
-    if (lokasitemp.locationid !== null) {
+    if (lokasitemp !== "") {
+      cekArCustomer(lokasitemp.locationIdemp);
+      await GetDataLocal("sales").then(async (res2) => {
+        // console.log("cek cache sales", res2);
+        if (res2 !== null) {
+          setNoso(res2[0].noso);
+          console.log("load dari storage", res2[0].noso);
+        } else {
+          let soNumber =
+            moment(new Date()).format("YYYYMMDDHHmmss").toString() +
+            lokasitemp.salesrep.toString() +
+            lokasitemp.locationIdemp.toString();
+          console.log("nomor baru", soNumber);
+          setNoso(soNumber);
+        }
+      });
+
       await GetDataLocal("additional").then(async (res1) => {
         if (res1 !== null) {
           setAdditional(res1);
-
           axios
             .all([
               getOngkosAngkut(res1.oa),
@@ -818,7 +877,9 @@ const SalesOrderBeras = ({ navigation }) => {
                   }
                 }
 
-                setListProductAvailable(product);
+                setListProductAvailable(
+                  [...product].sort((a, b) => (a.id > b.id ? 1 : -1))
+                );
 
                 const additional = [];
                 for (
@@ -855,7 +916,6 @@ const SalesOrderBeras = ({ navigation }) => {
   const getSuggestions = useCallback(
     async (q) => {
       const filterToken = q.toLowerCase();
-      console.log("brengsek", additional);
       console.log("getSuggestions", q);
       if (typeof q !== "string" || q.length < 3) {
         setSuggestionsList(null);
@@ -937,10 +997,10 @@ const SalesOrderBeras = ({ navigation }) => {
     };
 
     axios(config2).then(function async(response) {
-      console.log(
-        "cek CL",
-        response.data.WindowTabData.DataSet.DataRow.field.val
-      );
+      // console.log(
+      //   "cek CL",
+      //   response.data.WindowTabData.DataSet.DataRow.field.val
+      // );
       setAdditional({
         ...additional,
         cl: response.data.WindowTabData.DataSet.DataRow.field.val,
@@ -987,280 +1047,346 @@ const SalesOrderBeras = ({ navigation }) => {
             setIsloading(true);
 
             const dataSoDetail = [];
+
             todos.forEach((element) => {
               dataSoDetail.push({
-                "@preCommit": "false",
-                "@postCommit": "false",
-                TargetPort: "createData",
-                ModelCRUD: {
-                  serviceType: "addSalesOrderLine",
-                  TableName: "C_OrderLine",
-                  RecordID: "0",
-                  Action: "Create",
-                  DataRow: {
-                    field: [
-                      {
-                        "@column": "C_Order_ID",
-                        val: "@C_Order.C_Order_ID",
-                      },
-                      {
-                        "@column": "M_Product_ID",
-                        val: element.idempid,
-                      },
-                      {
-                        "@column": "QtyEntered",
-                        val: element.qty,
-                      },
-                      {
-                        "@column": "QtyOrdered",
-                        val: element.qty * element.weight,
-                      },
-                      {
-                        "@column": "PriceEntered",
-                        val:
-                          element.harga +
-                          element.oa * element.weight +
-                          element.addcost * element.weight,
-                      },
-                      {
-                        "@column": "PriceActual",
-                        val:
-                          element.harga / element.weight +
-                          element.oa +
-                          element.addcost,
-                      },
-                      {
-                        "@column": "PriceList",
-                        val: element.harga / element.weight, //harga perkilo
-                      },
-                      {
-                        "@column": "OngkosAngkut",
-                        val: element.oa, //oa saja
-                      },
-                      {
-                        "@column": "SubsidiAmt",
-                        val: element.addcost,
-                      },
-                      {
-                        "@column": "LineNetAmt",
-                        val:
-                          (element.harga +
-                            element.oa * element.weight +
-                            element.addcost * element.weight) *
-                          element.qty,
-                      },
-                      {
-                        "@column": "BPR_Task",
-                        val: element.task,
-                      },
-                      {
-                        "@column": "BPR_OldCode",
-                        val: element.id,
-                      },
-                      {
-                        "@column": "C_UOM_ID",
-                        val: element.unitid,
-                      },
-                    ],
-                  },
-                },
+                C_Order_ID: noso,
+                M_Product_ID: element.idempid,
+                QtyEntered: element.qty,
+                QtyOrdered: element.qty * element.weight,
+                PriceEntered:
+                  element.harga +
+                  element.oa * element.weight +
+                  element.addcost * element.weight,
+                PriceActual:
+                  element.harga / element.weight + element.oa + element.addcost,
+                PriceList: element.harga / element.weight,
+                OngkosAngkut: element.oa,
+                SubsidiAmt: element.addcost,
+                LineNetAmt:
+                  (element.harga +
+                    element.oa * element.weight +
+                    element.addcost * element.weight) *
+                  element.qty,
+                BPR_Task: element.task,
+                BPR_OldCode: element.id,
+                C_UOM_ID: element.unitid,
+                weight: element.weight,
+                unit: element.unit,
+                category: element.categori,
               });
             });
-            // console.log("data detail", lokasi);
-            var data = JSON.stringify({
-              CompositeRequest: {
-                ADLoginRequest: {
-                  user: lokasi.nama,
-                  pass: lokasi.pass,
-                  lang: "en_US",
-                  ClientID: "1000003",
-                  RoleID: "1000079",
-                  OrgID: "0",
-                  WarehouseID: "0",
-                  stage: "9",
-                },
-                serviceType: "composite",
-                operations: {
-                  operation: [
-                    {
-                      TargetPort: "createData",
-                      ModelCRUD: {
-                        serviceType: "addSalesOrder",
-                        TableName: "C_Order",
-                        RecordID: "0",
-                        Action: "Create",
-                        DataRow: {
-                          field: [
-                            {
-                              "@column": "AD_Org_ID",
-                              val: lokasi.org,
-                            },
-                            {
-                              "@column": "C_DocTypeTarget_ID",
-                              val: "1000048",
-                            },
-                            {
-                              "@column": "DateOrdered",
-                              val: moment(new Date()).format(
-                                "YYYY-MM-DD HH:mm:ss"
-                              ),
-                            },
-                            {
-                              "@column": "DatePromised",
-                              val: moment()
-                                .add(2, "days")
-                                .format("YYYY-MM-DD HH:mm:ss"),
-                            },
-                            {
-                              "@column": "C_BPartner_ID",
-                              val: lokasi.locationIdemp,
-                            },
-                            {
-                              "@column": "M_Warehouse_ID",
-                              val: lokasi.whid,
-                            },
-                            {
-                              "@column": "M_PriceList_ID",
-                              val: additional.pricelistid,
-                            },
-                            {
-                              "@column": "SalesRep_ID2",
-                              val: lokasi.salesrep,
-                            },
-                            {
-                              "@column": "DeliveryViaRule",
-                              val:
-                                oaYesNo === true && ongkosAngkut !== 0
-                                  ? "D"
-                                  : "P",
-                            },
-                          ],
-                        },
-                      },
-                    },
-                    dataSoDetail,
-                    {
-                      TargetPort: "setDocAction",
-                      ModelSetDocAction: {
-                        serviceType: "docActOrder",
-                        recordIDVariable: "@C_Order.C_Order_ID",
-                        docAction: "PR",
-                      },
-                    },
-                  ],
-                },
-              },
+
+            const dataSoHeader = [];
+            dataSoHeader.push({
+              C_Order_ID: noso,
+              AD_Org_ID: lokasi.org,
+              C_DocTypeTarget_ID: "1000048",
+              DateOrdered: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+              DatePromised: moment()
+                .add(2, "days")
+                .format("YYYY-MM-DD HH:mm:ss"),
+              C_BPartner_ID: lokasi.locationIdemp,
+              M_Warehouse_ID: lokasi.whid,
+              M_PriceList_ID: additional.pricelistid,
+              SalesRep_ID2: lokasi.salesrep,
+              DeliveryViaRule:
+                oaYesNo === true && ongkosAngkut !== 0 ? "D" : "P",
+              C_BPartner_Name: lokasi.customer,
             });
-            // console.log("data", data);
-            var config = {
-              method: "post",
-              url:
-                constants.idempServerBpr +
-                "ADInterface/services/rest/composite_service/composite_operation",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              data: data,
+            // console.log("header so", dataSoHeader);
+            // console.log("detail so", dataSoDetail);
+            const options = {
+              header: dataSoHeader,
+              detail: dataSoDetail,
             };
-            // console.log("config", config);
-            axios(config)
-              .then(function (response) {
-                // console.log("balikan", response.data);
-
-                console.log(
-                  "tes ambil error balikan",
-                  JSON.stringify(
-                    response.data.CompositeResponses.CompositeResponse
-                      .StandardResponse
-                  )
-                );
-
-                // console.log(
-                //   "balikan 2",
-                //   JSON.stringify(response.data).indexOf("@IsError: true") > -1
-                // );
-
-                // console.log(
-                //   "balikan 3",
-                //   JSON.stringify(response.data).indexOf(": true") > -1
-                // );
-
-                // console.log(
-                //   "check",response)
-
-                const check =
-                  JSON.stringify(response.data).indexOf("true") > -1;
-                // console.log("check", check);
-                // console.log(
-                //   "check",
-                //   response.data.CompositeResponses.CompositeResponse
-                //     .StandardResponse[1]
-                // );
-                if (check === true) {
-                  // console.log(
-                  //   "error so",
-                  //   response.data.CompositeResponses.CompositeResponse
-                  //     .StandardResponse[1].Error
-                  // );
-
-                  var arr = [];
-                  // var data =
-                  //   response.data.CompositeResponses.CompositeResponse
-                  //     .StandardResponse[2];
-
-                  var data =
-                    response.data.CompositeResponses.CompositeResponse
-                      .StandardResponse;
-
-                  // console.log("tes", data);
-
-                  // console.log("error value", data["Error"]);
-                  if (data["@IsError"] === true) {
-                    arr = data["Error"];
-                  }
-
-                  Alert.alert("Error SO Hubungi IT", arr, [{ text: "OK" }]);
-                  setIsloading(false);
-                } else {
-                  // console.log(
-                  //   "sukses",
-                  //   response.data.CompositeResponses.CompositeResponse
-                  // );
-                  let result =
-                    response.data.CompositeResponses.CompositeResponse
-                      .StandardResponse[0].outputFields.outputField[1][
-                      "@value"
-                    ];
-                  // console.log("no doc", result);
-
-                  const options = {
-                    sodoc: result,
-                    tglorder: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-                    salesman: lokasi.salesrep,
-                    nik: lokasi.nik,
-                    lokasi: lokasi.locationid,
-                    lokasiidemp: lokasi.locationIdemp,
-                  };
-                  // console.log("option", options);
-                  axios
-                    .post(
-                      constants.loginServer + "/insertsalesorderidemp",
-                      options
-                    )
-                    .then((response) => {
-                      // console.log(response.status);
-                      Alert.alert("Data SO Tersimpan", "", [{ text: "Okay" }]);
-                      AsyncStorage.removeItem("sales");
-                      // AsyncStorage.removeItem("additional");
-                      setTodos([]);
-                      cekCreditLimit(lokasi.locationIdemp);
-                    });
-                }
-              })
-              .catch(function (error) {
-                console.log(error);
+            console.log("datanya", options);
+            // console.log("http://localhost:3001/api/v1/salesorder-submit");
+            axios
+              .post(
+                constants.CashColServer + "/api/v1/salesorder/submit",
+                options
+              )
+              .then((response) => {
+                console.log("status", response);
+                Alert.alert("Data SO Tersimpan", "", [{ text: "Okay" }]);
+                setIsloading(false);
+                AsyncStorage.removeItem("sales");
+                setTodos([]);
               });
+
+            //remark SO ke lokal
+            // todos.forEach((element) => {
+            //   dataSoDetail.push({
+            //     "@preCommit": "false",
+            //     "@postCommit": "false",
+            //     TargetPort: "createData",
+            //     ModelCRUD: {
+            //       serviceType: "addSalesOrderLine",
+            //       TableName: "C_OrderLine",
+            //       RecordID: "0",
+            //       Action: "Create",
+            //       DataRow: {
+            //         field: [
+            //           {
+            //             "@column": "C_Order_ID",
+            //             val: "@C_Order.C_Order_ID",
+            //           },
+            //           {
+            //             "@column": "M_Product_ID",
+            //             val: element.idempid,
+            //           },
+            //           {
+            //             "@column": "QtyEntered",
+            //             val: element.qty,
+            //           },
+            //           {
+            //             "@column": "QtyOrdered",
+            //             val: element.qty * element.weight,
+            //           },
+            //           {
+            //             "@column": "PriceEntered",
+            //             val:
+            //               element.harga +
+            //               element.oa * element.weight +
+            //               element.addcost * element.weight,
+            //           },
+            //           {
+            //             "@column": "PriceActual",
+            //             val:
+            //               element.harga / element.weight +
+            //               element.oa +
+            //               element.addcost,
+            //           },
+            //           {
+            //             "@column": "PriceList",
+            //             val: element.harga / element.weight, //harga perkilo
+            //           },
+            //           {
+            //             "@column": "OngkosAngkut",
+            //             val: element.oa, //oa saja
+            //           },
+            //           {
+            //             "@column": "SubsidiAmt",
+            //             val: element.addcost,
+            //           },
+            //           {
+            //             "@column": "LineNetAmt",
+            //             val:
+            //               (element.harga +
+            //                 element.oa * element.weight +
+            //                 element.addcost * element.weight) *
+            //               element.qty,
+            //           },
+            //           {
+            //             "@column": "BPR_Task",
+            //             val: element.task,
+            //           },
+            //           {
+            //             "@column": "BPR_OldCode",
+            //             val: element.id,
+            //           },
+            //           {
+            //             "@column": "C_UOM_ID",
+            //             val: element.unitid,
+            //           },
+            //         ],
+            //       },
+            //     },
+            //   });
+            // });
+            // var data = JSON.stringify({
+            //   CompositeRequest: {
+            //     ADLoginRequest: {
+            //       user: lokasi.nama,
+            //       pass: lokasi.pass,
+            //       lang: "en_US",
+            //       ClientID: "1000003",
+            //       RoleID: "1000079",
+            //       OrgID: "0",
+            //       WarehouseID: "0",
+            //       stage: "9",
+            //     },
+            //     serviceType: "composite",
+            //     operations: {
+            //       operation: [
+            //         {
+            //           TargetPort: "createData",
+            //           ModelCRUD: {
+            //             serviceType: "addSalesOrder",
+            //             TableName: "C_Order",
+            //             RecordID: "0",
+            //             Action: "Create",
+            //             DataRow: {
+            //               field: [
+            //                 {
+            //                   "@column": "AD_Org_ID",
+            //                   val: lokasi.org,
+            //                 },
+            //                 {
+            //                   "@column": "C_DocTypeTarget_ID",
+            //                   val: "1000048",
+            //                 },
+            //                 {
+            //                   "@column": "DateOrdered",
+            //                   val: moment(new Date()).format(
+            //                     "YYYY-MM-DD HH:mm:ss"
+            //                   ),
+            //                 },
+            //                 {
+            //                   "@column": "DatePromised",
+            //                   val: moment()
+            //                     .add(2, "days")
+            //                     .format("YYYY-MM-DD HH:mm:ss"),
+            //                 },
+            //                 {
+            //                   "@column": "C_BPartner_ID",
+            //                   val: lokasi.locationIdemp,
+            //                 },
+            //                 {
+            //                   "@column": "M_Warehouse_ID",
+            //                   val: lokasi.whid,
+            //                 },
+            //                 {
+            //                   "@column": "M_PriceList_ID",
+            //                   val: additional.pricelistid,
+            //                 },
+            //                 {
+            //                   "@column": "SalesRep_ID2",
+            //                   val: lokasi.salesrep,
+            //                 },
+            //                 {
+            //                   "@column": "DeliveryViaRule",
+            //                   val:
+            //                     oaYesNo === true && ongkosAngkut !== 0
+            //                       ? "D"
+            //                       : "P",
+            //                 },
+            //               ],
+            //             },
+            //           },
+            //         },
+            //         dataSoDetail,
+            //         {
+            //           TargetPort: "setDocAction",
+            //           ModelSetDocAction: {
+            //             serviceType: "docActOrder",
+            //             recordIDVariable: "@C_Order.C_Order_ID",
+            //             docAction: "PR",
+            //           },
+            //         },
+            //       ],
+            //     },
+            //   },
+            // });
+            // var config = {
+            //   method: "post",
+            //   url:
+            //     constants.idempServerBpr +
+            //     "ADInterface/services/rest/composite_service/composite_operation",
+            //   headers: {
+            //     Accept: "application/json",
+            //     "Content-Type": "application/json",
+            //   },
+            //   data: data,
+            // };
+            // axios(config)
+            //   .then(function (response) {
+            //     // console.log("balikan", response.data);
+
+            //     console.log(
+            //       "tes ambil error balikan",
+            //       JSON.stringify(
+            //         response.data.CompositeResponses.CompositeResponse
+            //           .StandardResponse
+            //       )
+            //     );
+
+            //     // console.log(
+            //     //   "balikan 2",
+            //     //   JSON.stringify(response.data).indexOf("@IsError: true") > -1
+            //     // );
+
+            //     // console.log(
+            //     //   "balikan 3",
+            //     //   JSON.stringify(response.data).indexOf(": true") > -1
+            //     // );
+
+            //     // console.log(
+            //     //   "check",response)
+
+            //     const check =
+            //       JSON.stringify(response.data).indexOf("true") > -1;
+            //     // console.log("check", check);
+            //     // console.log(
+            //     //   "check",
+            //     //   response.data.CompositeResponses.CompositeResponse
+            //     //     .StandardResponse[1]
+            //     // );
+            //     if (check === true) {
+            //       // console.log(
+            //       //   "error so",
+            //       //   response.data.CompositeResponses.CompositeResponse
+            //       //     .StandardResponse[1].Error
+            //       // );
+
+            //       var arr = [];
+            //       // var data =
+            //       //   response.data.CompositeResponses.CompositeResponse
+            //       //     .StandardResponse[2];
+
+            //       var data =
+            //         response.data.CompositeResponses.CompositeResponse
+            //           .StandardResponse;
+
+            //       // console.log("tes", data);
+
+            //       // console.log("error value", data["Error"]);
+            //       if (data["@IsError"] === true) {
+            //         arr = data["Error"];
+            //       }
+
+            //       Alert.alert("Error SO Hubungi IT", arr, [{ text: "OK" }]);
+            //       setIsloading(false);
+            //     } else {
+            //       // console.log(
+            //       //   "sukses",
+            //       //   response.data.CompositeResponses.CompositeResponse
+            //       // );
+            //       let result =
+            //         response.data.CompositeResponses.CompositeResponse
+            //           .StandardResponse[0].outputFields.outputField[1][
+            //           "@value"
+            //         ];
+            //       // console.log("no doc", result);
+
+            //       const options = {
+            //         sodoc: result,
+            //         tglorder: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+            //         salesman: lokasi.salesrep,
+            //         nik: lokasi.nik,
+            //         lokasi: lokasi.locationid,
+            //         lokasiidemp: lokasi.locationIdemp,
+            //       };
+            //       // console.log("option", options);
+            //       axios
+            //         .post(
+            //           constants.loginServer + "/insertsalesorderidemp",
+            //           options
+            //         )
+            //         .then((response) => {
+            //           // console.log(response.status);
+            //           Alert.alert("Data SO Tersimpan", "", [{ text: "Okay" }]);
+            //           AsyncStorage.removeItem("sales");
+            //           // AsyncStorage.removeItem("additional");
+            //           setTodos([]);
+            //           cekCreditLimit(lokasi.locationIdemp);
+            //         });
+            //     }
+            //   })
+            //   .catch(function (error) {
+            //     console.log(error);
+            //   });
           },
         },
         {
@@ -1558,7 +1684,7 @@ const SalesOrderBeras = ({ navigation }) => {
     //   Number.parseFloat(totalBerat) -
     //     Number.parseFloat(todoQty) * Number.parseFloat(todoWeight)
     // );
-
+    // console.log("todos", todos);
     if (todos.length === 1) {
       setTodos(todos.length === 0);
     }

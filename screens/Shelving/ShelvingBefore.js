@@ -52,11 +52,13 @@ const ShelvingBefore = ({ navigation }) => {
     getLokasi();
     if (cameraRef) {
       // console.log("in take picture");
+      const camRatios = await cameraRef.current.getSupportedRatiosAsync();
       try {
         let photo = await cameraRef.current.takePictureAsync({
           skipProcessing: true,
-          allowsEditing: true,
-          aspect: [4, 3],
+          // allowsEditing: true,
+          // aspect: [4, 3],
+          ratio: camRatios,
           quality: 1,
         });
         // let resizePhoto = await ImageManipulator.manipulateAsync(
@@ -238,7 +240,7 @@ const ShelvingBefore = ({ navigation }) => {
               height: 20,
               tintColor: COLORS.gray2,
             }}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Home")}
           />
         }
         rightComponent={

@@ -57,8 +57,9 @@ import Settings from "./Settings/Settings";
 import ChangePassword from "./Settings/ChangePassword";
 import NotificationSetting from "./Settings/NotificationSetting";
 
-//Checkin
+//Checkinout
 import CheckIn from "./CheckIn/CheckIn";
+import CheckOut from "./CheckOut/CheckOut";
 
 //shelving
 import ShelvingBefore from "./Shelving/ShelvingBefore";
@@ -76,7 +77,8 @@ import SalesSurvey from "./Survey/SalesSurvey";
 import SalesOrderBeras from "./SalesOrder/salesOrderBeras";
 import SalesOrderBihun from "./SalesOrder/salesOrderBihun";
 import SalesOrderBerasNonKunjungan from "./SalesOrder/SalesOrderBerasNonKunjungan";
-
+import EditOrderSalesBeras from "./SalesOrder/editSalesOrderBeras";
+import DetailEditSoBeras from "./SalesOrder/DetailEditSoBeras";
 //retur
 import Retur from "./Retur/Retur";
 
@@ -115,6 +117,8 @@ export {
   SalesOrderBeras,
   SalesOrderBihun,
   SalesOrderBerasNonKunjungan,
+  EditOrderSalesBeras,
+  DetailEditSoBeras,
   ProductSurvey,
   ProductCompetitorSurvey,
   StockSurvey,
@@ -124,6 +128,7 @@ export {
   ShelvingAfter,
   ShelvingFloor,
   CheckIn,
+  CheckOut,
   OnBoarding,
   AuthLayout,
   SignIn,

@@ -1,9 +1,9 @@
 //BPR
 //production
 // const idempServerBpr = "http://108.137.95.190:8080/";
-// const idempServerBpr = "https://ibpr.sep-food.com/";
+const idempServerBpr = "https://ibpr.sep-food.com/";
 //staging
-const idempServerBpr = "http://202.158.42.132:8080/";
+// const idempServerBpr = "http://202.158.42.132:8080/";
 // const idempServerBpr = "https://stagingbpr.sep-food.com/";
 //Dev
 // const idempServerBpr = "http://202.158.42.131:8080/";
@@ -18,6 +18,10 @@ const idempServerRmp = "http://108.137.95.190:9090/";
 const loginServer = "http://108.137.170.97:8002";
 //Cash Collection Server
 const CashColServer = "https://berasraja.sep-food.com:8005";
+
+//server inhouse
+const inhouseServer =
+  "https://hai.sep-food.com/portalapi/public/index.php/api/ess/mobile/";
 
 const onboarding_screens = [
   {
@@ -519,6 +523,7 @@ export default {
   idempServerRmp,
   loginServer,
   CashColServer,
+  inhouseServer,
   onboarding_screens,
   screens,
   bottom_tabs,

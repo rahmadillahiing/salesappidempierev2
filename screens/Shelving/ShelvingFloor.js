@@ -58,11 +58,13 @@ const ShelvingFloor = ({ navigation }) => {
   const takePicture = async () => {
     // getLokasi();
     if (cameraRef) {
+      const camRatios = await cameraRef.current.getSupportedRatiosAsync();
       try {
         let photo = await cameraRef.current.takePictureAsync({
           skipProcessing: true,
-          allowsEditing: true,
-          aspect: [4, 3],
+          // allowsEditing: true,
+          // aspect: [4, 3],
+          ratio: camRatios,
           quality: 1,
         });
         // console.log("foto2an", photo);

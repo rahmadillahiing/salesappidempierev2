@@ -60,7 +60,7 @@ const InvoiceEditHeader = ({ navigation }) => {
       )
       .then((response) => {
         const hitunginvoice = response.data.length;
-
+        // console.log("response", response.data);
         let datainvoice = [];
         for (var i = 0; i < hitunginvoice; i++) {
           datainvoice.push({
@@ -101,7 +101,7 @@ const InvoiceEditHeader = ({ navigation }) => {
     // console.log("tes", filteredResult);
     setGagalKunjung(filteredResult);
 
-    console.log("data pilih", radioButtonsArray);
+    // console.log("data pilih", radioButtonsArray);
 
     radioButtonsArray === 4
       ? (setDtVisible(true), setSelectedTgl(null))
@@ -472,15 +472,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-    marginLeft: 10,
-    marginRight: 10,
-  },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+    marginLeft: 10,
+    marginRight: 10,
   },
   button: {
     borderRadius: 20,

@@ -128,12 +128,15 @@ const CheckIn = ({ navigation }) => {
 
   const takePicture = async () => {
     if (cameraRef) {
+      const camRatios = await cameraRef.current.getSupportedRatiosAsync();
+      console.log("ratio camera", camRatios);
       // console.log("in take picture");
       try {
         let photo = await cameraRef.current.takePictureAsync({
           skipProcessing: true,
-          allowsEditing: true,
-          aspect: [4, 3],
+          // allowsEditing: true,
+          // aspect: [4, 3],
+          ratio: camRatios,
           quality: 1,
         });
         return photo;
@@ -278,7 +281,7 @@ const CheckIn = ({ navigation }) => {
           customer: isRemember ? labellokasi : lokasiLain,
         };
 
-        console.log("data di cache", dataLocation);
+        // console.log("data di cache", dataLocation);
         persistLocation({ dataLocation });
 
         persistAdditional();
@@ -289,11 +292,11 @@ const CheckIn = ({ navigation }) => {
           {
             text: "Okay",
             onPress: () => {
-              if (canGoBack()) {
-                goBack();
-              } else {
-                navigate("Home");
-              }
+              // if (canGoBack()) {
+              navigation.navigate("Home");
+              // } else {
+              //   navigate("Home");
+              // }
             },
           },
         ]);

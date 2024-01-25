@@ -23,6 +23,7 @@ import {
   ShelvingFloor,
   OnBoarding,
   CheckIn,
+  CheckOut,
   SignIn,
   SignUp,
   ForgotPassword,
@@ -55,6 +56,8 @@ import {
   MonitoringSo,
   MonitoringSoDetail,
   DashboardDetail,
+  EditOrderSalesBeras,
+  DetailEditSoBeras,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -99,6 +102,8 @@ const App = () => {
           <Stack.Screen name="OnBoarding" component={OnBoarding} />
 
           <Stack.Screen name="CheckIn" component={CheckIn} />
+
+          <Stack.Screen name="CheckOut" component={CheckOut} />
 
           <Stack.Screen name="SignIn" component={SignIn} />
 
@@ -156,6 +161,16 @@ const App = () => {
           <Stack.Screen name="CustomerSurvey" component={CustomerSurvey} />
 
           <Stack.Screen name="MonitoringSo" component={MonitoringSo} />
+
+          <Stack.Screen
+            name="EditSalesOrderBeras"
+            component={EditOrderSalesBeras}
+          />
+
+          <Stack.Screen
+            name="DetailEditSoBeras"
+            component={DetailEditSoBeras}
+          />
 
           <Stack.Screen
             name="MonitoringSoDetail"

@@ -206,6 +206,60 @@ const domino = require("../assets/dummyData/domino_pizza.png");
 const starbucks = require("../assets/dummyData/starbucks.png");
 const veg_biryani = require("../assets/dummyData/veg_biryani.png");
 const wrap_sandwich = require("../assets/dummyData/wrap_sandwich.png");
+const absen = require("../assets/dummyData/absen.png");
+
+const testing = [
+  {
+    title: "2024-01-15",
+    data: [
+      {
+        id: "2024011511191810080831042537",
+        orderdate: "15 Jan, 11:21",
+        status: "D",
+        status_desc: "Draft",
+        orgid: 1000007,
+        partnerid: 1042537,
+        name: "BAST MART - TAPOS DEPOK",
+        itemCount: 2,
+      },
+    ],
+  },
+  {
+    title: "2024-01-17",
+    data: [
+      {
+        id: "2024011708551810080831015309",
+        orderdate: "17 Jan, 10:13",
+        status: "C",
+        status_desc: "Complete",
+        orgid: 1000007,
+        partnerid: 1015309,
+        name: "ACHMAD EFFENDI - LEBAK BULUS",
+        itemCount: 3,
+      },
+      {
+        id: "2024011710140310080831015309",
+        orderdate: "17 Jan, 10:14",
+        status: "D",
+        status_desc: "Draft",
+        orgid: 1000007,
+        partnerid: 1015309,
+        name: "ACHMAD EFFENDI - LEBAK BULUS",
+        itemCount: 2,
+      },
+      {
+        id: "2024011710201810080831005085",
+        orderdate: "17 Jan, 10:20",
+        status: "D",
+        status_desc: "Draft",
+        orgid: 1000007,
+        partnerid: 1005085,
+        name: "AMAROOSA ROYAL HOTEL - BOGOR",
+        itemCount: 2,
+      },
+    ],
+  },
+];
 
 const orderHistories = [
   {
@@ -388,25 +442,25 @@ const notifications = [
       },
     ],
   },
-  {
-    title: "Yesterday",
-    data: [
-      {
-        id: 3,
-        image: domino,
-        title: "Domino's - Buy 1 get 1 free",
-        desc: "Buy 1 get 1 free for small sizes until Nov 30, 2021",
-        duration: "1 day ago",
-      },
-      {
-        id: 4,
-        image: veg_biryani,
-        title: "Veg Biryani - 35% sale today",
-        desc: "Buy 1 get 1 free for small sizes until Nov 30, 2021",
-        duration: "1 day ago",
-      },
-    ],
-  },
+  // {
+  //   title: "Yesterday",
+  //   data: [
+  //     {
+  //       id: 3,
+  //       image: domino,
+  //       title: "Domino's - Buy 1 get 1 free",
+  //       desc: "Buy 1 get 1 free for small sizes until Nov 30, 2021",
+  //       duration: "1 day ago",
+  //     },
+  //     {
+  //       id: 4,
+  //       image: veg_biryani,
+  //       title: "Veg Biryani - 35% sale today",
+  //       desc: "Buy 1 get 1 free for small sizes until Nov 30, 2021",
+  //       duration: "1 day ago",
+  //     },
+  //   ],
+  // },
 ];
 
 const deliveryMan = {
@@ -429,4 +483,5 @@ export default {
   usedCoupons,
   notifications,
   deliveryMan,
+  testing,
 };

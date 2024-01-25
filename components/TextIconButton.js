@@ -22,6 +22,7 @@ const TextIconButton = ({
         justifyContent: "center",
         ...containerStyle,
       }}
+      disabled={disabled}
       onPress={onPress}
     >
       {iconPosition == "LEFT" && (

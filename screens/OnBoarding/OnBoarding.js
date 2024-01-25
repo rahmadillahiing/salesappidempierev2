@@ -84,7 +84,7 @@ const OnBoarding = ({ navigation }) => {
   const getUser = () => {
     setIsLoading(true);
     GetDataLocal("user").then(async (res) => {
-      console.log("getuser :", res);
+      // console.log("getuser :", res);
       if (res !== null) {
         const response = await axios
           .post(
@@ -121,7 +121,10 @@ const OnBoarding = ({ navigation }) => {
             }
           )
           .then(function (response) {
-            console.log("info by token", response.data.WindowTabData.RowCount);
+            console.log(
+              "info by token",
+              response.data.WindowTabData.DataSet.DataRow
+            );
             if (response.status === 200) {
               if (response.data.WindowTabData.RowCount > 0) {
                 setTimeout(() => {

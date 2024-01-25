@@ -1,203 +1,221 @@
-import React from 'react';
-import {
-    View,
-    Text,
-    Image,
-    StyleSheet
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import { View, Text, Image, StyleSheet, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-import TextButton from './TextButton';
-import OrderStatus from './OrderStatus';
+import TextButton from "./TextButton";
+import OrderStatus from "./OrderStatus";
 
-import { FONTS, COLORS, SIZES } from "../constants";
+import { FONTS, COLORS, SIZES, constants } from "../constants";
+import axios from "axios";
 
-const OrderCard = ({ orderItem }) => {
+const OrderCard = ({ orderItem, profile }) => {
+  const navigation = useNavigation();
 
-    const navigation = useNavigation();
+  console.log("order", orderItem);
 
-    function getStatus() {
-        if (orderItem.status == "D") {
-            return "DELIVERED"
-        } else if (orderItem.status == "C") {
-            return "CANCELLED"
-        } else if (orderItem.status == "O") {
-            return "PENDING"
-        }
+  console.log("profile", profile);
+
+  function getStatus() {
+    if (orderItem.status == "D") {
+      return "Draft";
+    } else if (orderItem.status == "C") {
+      return "Complete";
+    } else if (orderItem.status == "R") {
+      return "Reject";
+    } else if (orderItem.status == "E") {
+      return "Expired";
     }
+  }
 
-    return (
-        <View
-            style={{
-                marginBottom: SIZES.radius,
-                padding: SIZES.radius,
-                borderRadius: SIZES.radius,
-                backgroundColor: COLORS.lightGray2
-            }}
+  // async function cancelSo(order) {
+  //   console.log("data", order);
+
+  //   Alert.alert(
+  //     "Reject Sales Order?",
+  //     "Cancel Sales Order " + order.name + " tanggal" + order.orderdate + "?",
+  //     [
+  //       {
+  //         text: "Yes",
+  //         onPress: async () => {
+  //           axios
+  //             .get(
+  //               constants.CashColServer +
+  //                 `/api/v1/salesorder/salesheader/${order.orderid}/cancelso`
+  //             )
+  //             .then(function (response) {
+  //               Alert.alert("Data SO terupdate", response, [{ text: "Okay" }]);
+  //             })
+  //             .catch((error) => {
+  //               console.log("error update", error);
+  //             });
+  //         },
+  //       },
+  //       {
+  //         text: "No",
+  //         onPress: () => {
+  //           return;
+  //         },
+  //       },
+  //     ]
+  //   );
+  // }
+
+  return (
+    <View
+      style={{
+        marginBottom: SIZES.radius,
+        padding: SIZES.radius,
+        borderRadius: SIZES.radius,
+        backgroundColor: COLORS.lightGray2,
+      }}
+    >
+      {/* Order Info */}
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        {/* Logo */}
+        {/* <View
+          style={{
+            width: 60,
+            height: 60,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 10,
+            backgroundColor: COLORS.white,
+          }}
         >
-            {/* Order Info */}
+          <Image
+            source={orderItem.image}
+            style={{
+              width: 35,
+              height: 35,
+            }}
+          />
+        </View> */}
+
+        {/* Info */}
+        <View
+          style={{
+            flex: 1,
+            marginLeft: SIZES.radius,
+          }}
+        >
+          <Text style={{ ...FONTS.h2, fontSize: 13, lineHeight: 20 }}>
+            {orderItem.name}
+          </Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            {/* Delivered Timestamp */}
+            <Text style={{ color: COLORS.gray, ...FONTS.body4 }}>
+              {orderItem.orderdate}
+            </Text>
+
+            {/* dot separator */}
             <View
-                style={{
-                    flexDirection: 'row',
-                }}
-            >
-                {/* Logo */}
-                <View
-                    style={{
-                        width: 60,
-                        height: 60,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: 10,
-                        backgroundColor: COLORS.white,
-                    }}
-                >
-                    <Image
-                        source={orderItem.image}
-                        style={{
-                            width: 35,
-                            height: 35,
-                        }}
-                    />
-                </View>
+              style={{
+                backgroundColor: COLORS.gray,
+                marginHorizontal: SIZES.base,
+                height: 4,
+                width: 4,
+                borderRadius: 2,
+                alignSelf: "center",
+              }}
+            />
 
-                {/* Info */}
-                <View
-                    style={{
-                        flex: 1,
-                        marginLeft: SIZES.radius,
-                    }}
-                >
-                    <Text style={{ ...FONTS.h2, fontSize: 18, lineHeight: 0 }}>{orderItem.name}</Text>
+            {/* Item count */}
+            <Text style={{ ...FONTS.body4, color: COLORS.gray }}>
+              {orderItem.itemCount} items
+            </Text>
+          </View>
 
-                    <View
-                        style={{
-                            flexDirection: 'row'
-                        }}
-                    >
-                        {/* Delivered Timestamp */}
-                        <Text style={{ color: COLORS.gray, ...FONTS.body4 }}>{orderItem.deliveredTime}</Text>
-
-                        {/* dot separator */}
-                        <View
-                            style={{
-                                backgroundColor: COLORS.gray,
-                                marginHorizontal: SIZES.base,
-                                height: 4,
-                                width: 4,
-                                borderRadius: 2,
-                                alignSelf: 'center'
-                            }}
-                        />
-
-                        {/* Item count */}
-                        <Text style={{ ...FONTS.body4, color: COLORS.gray }}>{orderItem.itemCount} items</Text>
-                    </View>
-
-                    <OrderStatus
-                        status={getStatus()}
-                        containerStyle={{
-                            marginTop: 0
-                        }}
-                        labelStyle={{
-                            ...FONTS.body4
-                        }}
-                    />
-                </View>
-
-                {/* Price / Order no */}
-                <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h2, fontSize: 18, lineHeight: 0 }}>
-                        {
-                            ['C', 'D'].includes(orderItem.status) ? `$${orderItem.price.toFixed(2)}` :
-                                `#${orderItem.id}`
-                        }
-                    </Text>
-                </View>
-
-            </View>
-
-            {/* Buttons */}
-            <View
-                style={{
-                    flexDirection: 'row',
-                    marginTop: SIZES.radius
-                }}
-            >
-                {
-                    // On the way --> Track Order + Cancel
-                    orderItem.status == 'O' &&
-                    <>
-                        <TextButton
-                            buttonContainerStyle={{
-                                ...styles.textButtonContainer,
-                                backgroundColor: COLORS.primary
-                            }}
-                            label="Track Order"
-                            labelStyle={{
-                                ...FONTS.body4
-                            }}
-                            onPress={() => console.log('Track Order')}
-                        />
-
-                        <TextButton
-                            buttonContainerStyle={{
-                                ...styles.textButtonContainer,
-                                backgroundColor: COLORS.transparentPrimary9,
-                                marginLeft: SIZES.radius
-                            }}
-                            label="Cancel"
-                            labelStyle={{
-                                ...FONTS.body4,
-                                color: COLORS.primary
-                            }}
-                            onPress={() => console.log('Cancel Order')}
-                        />
-
-                    </>
-                }
-
-                {
-                    // Delivered / Cancel --> Re-order + Rate
-                    orderItem.status != 'O' &&
-                    <>
-                        <TextButton
-                            buttonContainerStyle={{
-                                ...styles.textButtonContainer,
-                                backgroundColor: COLORS.primary
-                            }}
-                            label="Re-Order"
-                            labelStyle={{
-                                ...FONTS.h4
-                            }}
-                            onPress={() => console.log('Re-order')}
-                        />
-                        <TextButton
-                            buttonContainerStyle={{
-                                ...styles.textButtonContainer,
-                                backgroundColor: COLORS.transparentPrimary9,
-                                marginLeft: SIZES.radius
-                            }}
-                            label="Rate"
-                            labelStyle={{
-                                ...FONTS.h4,
-                                color: COLORS.primary
-                            }}
-                            onPress={() => navigation.navigate('Review')}
-                        />
-                    </>
-                }
-            </View>
+          <OrderStatus
+            status={getStatus()}
+            containerStyle={{
+              marginTop: 0,
+            }}
+            labelStyle={{
+              ...FONTS.body4,
+            }}
+          />
         </View>
-    )
-}
+
+        {/* Price / Order no */}
+        {/* <View>
+          <Text
+            style={{
+              color: COLORS.primary,
+              ...FONTS.h2,
+              fontSize: 18,
+              lineHeight: 0,
+            }}
+          >
+            {["C", "D"].includes(orderItem.status)
+              ? `$${orderItem.price.toFixed(2)}`
+              : `#${orderItem.id}`}
+          </Text>
+        </View> */}
+      </View>
+
+      {/* Buttons */}
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: SIZES.radius,
+        }}
+      >
+        {orderItem.status === "D" && (
+          <>
+            <TextButton
+              buttonContainerStyle={{
+                ...styles.textButtonContainer,
+                backgroundColor: COLORS.primary,
+              }}
+              label="Lihat Detail"
+              labelStyle={{
+                ...FONTS.h4,
+              }}
+              onPress={() =>
+                navigation.navigate("DetailEditSoBeras", {
+                  detailItem: {
+                    orderItem,
+                  },
+                })
+              }
+            />
+            {/* <TextButton
+                buttonContainerStyle={{
+                  ...styles.textButtonContainer,
+                  backgroundColor: COLORS.transparentPrimary9,
+                  marginLeft: SIZES.radius,
+                }}
+                label="Cancel"
+                labelStyle={{
+                  ...FONTS.h4,
+                  color: COLORS.primary,
+                }}
+                onPress={() => {
+                  cancelSo(orderItem);
+                }}
+              /> */}
+          </>
+        )}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    textButtonContainer: {
-        flex: 1,
-        height: 40,
-        borderRadius: 10,
-    }
-})
+  textButtonContainer: {
+    flex: 1,
+    height: 40,
+    borderRadius: 10,
+  },
+});
 
 export default OrderCard;

@@ -423,8 +423,8 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
           style={{
             marginTop: SIZES.padding,
             backgroundColor: COLORS.lightGray1,
-            padding: 5,
-            borderRadius: 10,
+            padding: 2,
+            borderRadius: 5,
             flex: 1,
             height: 150,
           }}

@@ -110,7 +110,7 @@ const SignIn = ({ navigation }) => {
   const persistLogin = (credentials, message, status) => {
     AsyncStorage.setItem("user", JSON.stringify(credentials))
       .then(() => {
-        // console.log("persist Login :", credentials);
+        console.log("persist Login :", credentials);
       })
       .catch((error) => {
         console.log(error);

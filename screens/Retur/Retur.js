@@ -168,11 +168,14 @@ const Retur = ({ navigation }) => {
   const takePicture = async () => {
     if (cameraRef) {
       // console.log("in take picture");
+      const camRatios = await cameraRef.current.getSupportedRatiosAsync();
+
       try {
         let photo = await cameraRef.current.takePictureAsync({
           skipProcessing: true,
-          allowsEditing: true,
-          aspect: [4, 3],
+          // allowsEditing: true,
+          // aspect: [4, 3],
+          ratio: camRatios,
           quality: 1,
         });
 
@@ -665,6 +668,7 @@ const Retur = ({ navigation }) => {
   };
 
   async function simpanRetur() {
+    console.log("lokasi", lokasi);
     if (todos.length === 0) {
       Alert.alert(
         "Warning",
@@ -796,7 +800,7 @@ const Retur = ({ navigation }) => {
 
             axios(config)
               .then(function (response) {
-                // console.log(JSON.stringify(response.data));
+                console.log(JSON.stringify(response.data));
 
                 const check =
                   JSON.stringify(response.data).indexOf("true") > -1;

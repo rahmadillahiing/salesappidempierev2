@@ -13,6 +13,7 @@ const smilingman = require("../assets/images/smilingman.png");
 const bprlogo = require("../assets/images/bprlogo.png");
 const raja = require("../assets/images/raja.png");
 const standar = require("../assets/images/default-img.png");
+const absen = require("../assets/dummyData/absen.png");
 
 export default {
   background_01,
@@ -30,4 +31,5 @@ export default {
   bprlogo,
   raja,
   standar,
+  absen,
 };

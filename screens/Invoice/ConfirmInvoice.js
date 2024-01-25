@@ -377,7 +377,7 @@ const ConfirmInvoice = ({ navigation }) => {
         }
       > */}
       <StatusBar backgroundColor="#FF6347" barStyle="light-content" />
-      <View>
+      <View style={styles.container}>
         <SwipeListView
           RefreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

@@ -384,7 +384,9 @@ const CustomerSurvey = ({ navigation }) => {
       });
     }
     // console.log("type toko :", datatypetoko);
-    setDataCustType(datatypetoko);
+    setDataCustType(
+      [...datatypetoko].sort((a, b) => (a.label > b.label ? 1 : -1))
+    );
 
     //   let datatypetoko = [];
     //   const count = foundtypetoko.length;
@@ -454,7 +456,9 @@ const CustomerSurvey = ({ navigation }) => {
       });
     }
     // console.log("data channel", datachannel);
-    setDataChannel(datachannel);
+    setDataChannel(
+      [...datachannel].sort((a, b) => (a.label > b.label ? 1 : -1))
+    );
   };
 
   const getTerm = async () => {
@@ -502,251 +506,575 @@ const CustomerSurvey = ({ navigation }) => {
         value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
       });
     }
-    console.log("data term", dataTerm);
-    setDataTerm(dataTerm);
+    // console.log("data term", dataTerm);
+    setDataTerm([...dataTerm].sort((a, b) => (a.label > b.label ? 1 : -1)));
   };
 
-  const getKelurahan = () => {
-    const url =
-      constants.loginServer +
-      `/getkelurahan?filter=${kecamatan.id}&filter2=${city.id}&filter3=${provinsi.id}`;
-    // console.log("url", url);
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundKel = isJson && (await response.json());
-
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getKelurahan = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getVillage",
+            DataRow: {
+              field: [
+                {
+                  "@column": "BPR_District_ID",
+                  val: kecamatan.id,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
-
-      let dataKel = [];
-      const count = foundKel.length;
-
-      for (var i = 0; i < count; i++) {
-        dataKel.push({
-          id: foundKel[i].id,
-          label: foundKel[i].label.toString(),
-          value: foundKel[i].value,
+    );
+    if (response.data.WindowTabData.Success === true) {
+      var dataVillage = [];
+      var countVillage = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countVillage; i++) {
+        dataVillage.push({
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
         });
       }
-      // console.log("API kecamatan :", dataKel);
-      setDataKelurahan(dataKel);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+    }
+    setDataKelurahan(
+      [...dataVillage].sort((a, b) => (a.label > b.label ? 1 : -1))
+    );
+    // const url =
+    //   constants.loginServer +
+    //   `/getkelurahan?filter=${kecamatan.id}&filter2=${city.id}&filter3=${provinsi.id}`;
+    // // console.log("url", url);
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundKel = isJson && (await response.json());
+
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+
+    //   let dataKel = [];
+    //   const count = foundKel.length;
+
+    //   for (var i = 0; i < count; i++) {
+    //     dataKel.push({
+    //       id: foundKel[i].id,
+    //       label: foundKel[i].label.toString(),
+    //       value: foundKel[i].value,
+    //     });
+    //   }
+    //   // console.log("API kecamatan :", dataKel);
+    //   setDataKelurahan(dataKel);
+    // });
   };
 
-  const getKelurahanInv = () => {
-    const url =
-      constants.loginServer +
-      `/getkelurahan?filter=${kecamatanInv.id}&filter2=${cityInv.id}&filter3=${provinsiInv.id}`;
-    // console.log("url", url);
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundKel = isJson && (await response.json());
-
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getKelurahanInv = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getVillage",
+            DataRow: {
+              field: [
+                {
+                  "@column": "BPR_District_ID",
+                  val: kecamatanInv.id,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
-
-      let dataKel = [];
-      const count = foundKel.length;
-
-      for (var i = 0; i < count; i++) {
-        dataKel.push({
-          id: foundKel[i].id,
-          label: foundKel[i].label.toString(),
-          value: foundKel[i].value,
+    );
+    if (response.data.WindowTabData.Success === true) {
+      var dataVillage = [];
+      var countVillage = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countVillage; i++) {
+        dataVillage.push({
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
         });
       }
-      // console.log("API kecamatan :", dataKel);
-      setDataKelurahanInv(dataKel);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+    }
+    setDataKelurahanInv(
+      [...dataVillage].sort((a, b) => (a.label > b.label ? 1 : -1))
+    );
+    // const url =
+    //   constants.loginServer +
+    //   `/getkelurahan?filter=${kecamatanInv.id}&filter2=${cityInv.id}&filter3=${provinsiInv.id}`;
+    // // console.log("url", url);
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundKel = isJson && (await response.json());
+
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+
+    //   let dataKel = [];
+    //   const count = foundKel.length;
+
+    //   for (var i = 0; i < count; i++) {
+    //     dataKel.push({
+    //       id: foundKel[i].id,
+    //       label: foundKel[i].label.toString(),
+    //       value: foundKel[i].value,
+    //     });
+    //   }
+    //   // console.log("API kecamatan :", dataKel);
+    //   setDataKelurahanInv(dataKel);
+    // });
   };
 
-  const getKecamatan = () => {
-    const url =
-      constants.loginServer +
-      `/getkecamatan?filter=${city.id}&filter2=${provinsi.id}`;
-    // console.log("url", url);
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundKec = isJson && (await response.json());
-      // console.log("kecamatan ketemu", foundKec);
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getKecamatan = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getDistrict",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_Country_ID",
+                  val: 209,
+                },
+                {
+                  "@column": "C_City_ID",
+                  val: city.id,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
-
-      let dataKec = [];
-      const count = foundKec.length;
-
-      for (var i = 0; i < count; i++) {
-        dataKec.push({
-          id: foundKec[i].id,
-          label: foundKec[i].label.toString(),
-          value: foundKec[i].value,
+    );
+    if (response.data.WindowTabData.Success === true) {
+      var dataDistrict = [];
+      var countDistrict = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countDistrict; i++) {
+        dataDistrict.push({
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
         });
       }
-      // console.log("API kecamatan :", dataKec);
-      setDataKecamatan(dataKec);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+    }
+    setDataKecamatan(
+      [...dataDistrict].sort((a, b) => (a.label > b.label ? 1 : -1))
+    );
+    // const url =
+    //   constants.loginServer +
+    //   `/getkecamatan?filter=${city.id}&filter2=${provinsi.id}`;
+    // // console.log("url", url);
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundKec = isJson && (await response.json());
+    //   // console.log("kecamatan ketemu", foundKec);
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+
+    //   let dataKec = [];
+    //   const count = foundKec.length;
+
+    //   for (var i = 0; i < count; i++) {
+    //     dataKec.push({
+    //       id: foundKec[i].id,
+    //       label: foundKec[i].label.toString(),
+    //       value: foundKec[i].value,
+    //     });
+    //   }
+    //   // console.log("API kecamatan :", dataKec);
+    //   setDataKecamatan(dataKec);
+    // });
   };
 
-  const getKecamatanInv = () => {
-    const url =
-      constants.loginServer +
-      `/getkecamatan?filter=${cityInv.id}&filter2=${provinsiInv.id}`;
-    // console.log("url", url);
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundKec = isJson && (await response.json());
-      // console.log("kecamatan ketemu", foundKec);
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getKecamatanInv = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getDistrict",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_Country_ID",
+                  val: 209,
+                },
+                {
+                  "@column": "C_City_ID",
+                  val: cityInv.id,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
-
-      let dataKec = [];
-      const count = foundKec.length;
-
-      for (var i = 0; i < count; i++) {
-        dataKec.push({
-          id: foundKec[i].id,
-          label: foundKec[i].label.toString(),
-          value: foundKec[i].value,
+    );
+    if (response.data.WindowTabData.Success === true) {
+      var dataDistrict = [];
+      var countDistrict = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countDistrict; i++) {
+        dataDistrict.push({
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
         });
       }
-      // console.log("API kecamatan :", dataKec);
-      setDataKecamatanInv(dataKec);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+    }
+    setDataKecamatanInv(
+      [...dataDistrict].sort((a, b) => (a.label > b.label ? 1 : -1))
+    );
+    // const url =
+    //   constants.loginServer +
+    //   `/getkecamatan?filter=${cityInv.id}&filter2=${provinsiInv.id}`;
+    // // console.log("url", url);
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundKec = isJson && (await response.json());
+    //   // console.log("kecamatan ketemu", foundKec);
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+    //   let dataKec = [];
+    //   const count = foundKec.length;
+    //   for (var i = 0; i < count; i++) {
+    //     dataKec.push({
+    //       id: foundKec[i].id,
+    //       label: foundKec[i].label.toString(),
+    //       value: foundKec[i].value,
+    //     });
+    //   }
+    //   // console.log("API kecamatan :", dataKec);
+    //   setDataKecamatanInv(dataKec);
+    // });
   };
 
-  const getCity = () => {
-    const url = constants.loginServer + `/getcity?filter=${provinsi.id}`;
-
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundCity = isJson && (await response.json());
-
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getCity = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getKota",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_Region_ID",
+                  val: provinsi.id,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
-
-      let dataCity = [];
-      const count = foundCity.length;
-
-      for (var i = 0; i < count; i++) {
+    );
+    if (response.data.WindowTabData.Success === true) {
+      var dataCity = [];
+      var countCity = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countCity; i++) {
         dataCity.push({
-          id: foundCity[i].id,
-          label: foundCity[i].label.toString(),
-          value: foundCity[i].value,
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
         });
       }
-      setDataCity(dataCity);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+      return;
+    }
+    setDataCity([...dataCity].sort((a, b) => (a.label > b.label ? 1 : -1)));
+
+    // const url = constants.loginServer + `/getcity?filter=${provinsi.id}`;
+
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundCity = isJson && (await response.json());
+
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+
+    //   let dataCity = [];
+    //   const count = foundCity.length;
+
+    //   for (var i = 0; i < count; i++) {
+    //     dataCity.push({
+    //       id: foundCity[i].id,
+    //       label: foundCity[i].label.toString(),
+    //       value: foundCity[i].value,
+    //     });
+    //   }
+    //   setDataCity(dataCity);
+    // });
   };
 
-  const getCityInv = () => {
-    const url = constants.loginServer + `/getcity?filter=${provinsiInv.id}`;
-
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundCity = isJson && (await response.json());
-
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getCityInv = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getKota",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_Region_ID",
+                  val: provinsiInv.id,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
-
-      let dataCity = [];
-      const count = foundCity.length;
-
-      for (var i = 0; i < count; i++) {
+    );
+    if (response.data.WindowTabData.Success === true) {
+      var dataCity = [];
+      var countCity = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countCity; i++) {
         dataCity.push({
-          id: foundCity[i].id,
-          label: foundCity[i].label.toString(),
-          value: foundCity[i].value,
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
         });
       }
-      setDataCityInv(dataCity);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+      return;
+    }
+    setDataCityInv([...dataCity].sort((a, b) => (a.label > b.label ? 1 : -1)));
+
+    // const url = constants.loginServer + `/getcity?filter=${provinsiInv.id}`;
+
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundCity = isJson && (await response.json());
+
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+
+    //   let dataCity = [];
+    //   const count = foundCity.length;
+
+    //   for (var i = 0; i < count; i++) {
+    //     dataCity.push({
+    //       id: foundCity[i].id,
+    //       label: foundCity[i].label.toString(),
+    //       value: foundCity[i].value,
+    //     });
+    //   }
+    //   setDataCityInv(dataCity);
+    // });
   };
 
-  const getProvinsi = () => {
-    const url = constants.loginServer + "/getprovinsi?filter=";
-
-    fetch(url).then(async (response) => {
-      const isJson = response.headers
-        .get("content-type")
-        ?.includes("application/json");
-      const foundProvince = isJson && (await response.json());
-
-      if (!response.ok) {
-        // get error message from body or default to response status
-        // const error = (data && data.message) || response.status;
-        // return Promise.reject(error);
-        console.log("error");
-        return;
+  const getProvinsi = async () => {
+    const response = await axios.post(
+      constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getProvinsi",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_Country_ID",
+                  val: 209,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
       }
+    );
+    if (response.data.WindowTabData.Success === true) {
+      // console.log("provinsi", response.data.WindowTabData.DataSet.DataRow[0]);
 
-      // console.log("tes", foundProvince);
-      // console.log("hitung",foundProvince.length);
-      let dataProv = [];
-      const count = foundProvince.length;
-
-      for (var i = 0; i < count; i++) {
+      var dataProv = [];
+      var countProv = response.data.WindowTabData.RowCount;
+      for (var i = 0; i < countProv; i++) {
         dataProv.push({
-          id: foundProvince[i].id,
-          label: foundProvince[i].label.toString(),
-          value: foundProvince[i].value,
+          id: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          value: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
         });
       }
-      // console.log("provinsi", dataProv);
-      setDataProv(dataProv);
-      setDataProvInv(dataProv);
-    });
+    } else {
+      Alert.alert("Cek Kembali Koneksi Anda");
+    }
+    setDataProv([...dataProv].sort((a, b) => (a.label > b.label ? 1 : -1)));
+    setDataProvInv([...dataProv].sort((a, b) => (a.label > b.label ? 1 : -1)));
+    // const url = constants.loginServer + "/getprovinsi?filter=";
+
+    // fetch(url).then(async (response) => {
+    //   const isJson = response.headers
+    //     .get("content-type")
+    //     ?.includes("application/json");
+    //   const foundProvince = isJson && (await response.json());
+
+    //   if (!response.ok) {
+    //     // get error message from body or default to response status
+    //     // const error = (data && data.message) || response.status;
+    //     // return Promise.reject(error);
+    //     console.log("error");
+    //     return;
+    //   }
+
+    //   // console.log("tes", foundProvince);
+    //   // console.log("hitung",foundProvince.length);
+    //   let dataProv = [];
+    //   const count = foundProvince.length;
+
+    //   for (var i = 0; i < count; i++) {
+    //     dataProv.push({
+    //       id: foundProvince[i].id,
+    //       label: foundProvince[i].label.toString(),
+    //       value: foundProvince[i].value,
+    //     });
+    //   }
+    //   // console.log("provinsi", dataProv);
+    //   setDataProv(dataProv);
+    //   setDataProvInv(dataProv);
+    // });
   };
 
   const takePicture = async () => {
     if (cameraRef) {
       // console.log("in take picture");
+      const camRatios = await cameraRef.current.getSupportedRatiosAsync();
       try {
         let photo = await cameraRef.current.takePictureAsync({
           skipProcessing: true,
-          allowsEditing: true,
-          aspect: [4, 3],
+          // allowsEditing: true,
+          // aspect: [4, 3],
+          ratio: camRatios,
           quality: 1,
         });
 
@@ -795,6 +1123,18 @@ const CustomerSurvey = ({ navigation }) => {
       Alert.alert("Warning", "Pilih title perusahaan terlebih dahulu");
       return;
     }
+
+    if (
+      (companyTitle.value === "PT" || companyTitle.value === "CV") &&
+      npwp === ""
+    ) {
+      Alert.alert(
+        "Warning",
+        "NPWP wajib terisi dikarenakan jenis customer PT/CV"
+      );
+      return;
+    }
+
     if (companyName === "") {
       Alert.alert("Warning", "Isi nama perusahaan terlebih dahulu");
       return;
@@ -805,6 +1145,16 @@ const CustomerSurvey = ({ navigation }) => {
     }
     if (phoneNo === "") {
       Alert.alert("Warning", "Isi No HP terlebih dahulu");
+      return;
+    }
+
+    if ((phoneNo === "") | (phoneNo.length < 11)) {
+      Alert.alert("Warning", "Nomor HP harus terisi/valid");
+      return;
+    }
+
+    if (custNo === "") {
+      Alert.alert("Warning", "Isi No Telp terlebih dahulu");
       return;
     }
 
@@ -852,6 +1202,55 @@ const CustomerSurvey = ({ navigation }) => {
 
     if (termPayment === "") {
       Alert.alert("Warning", "Pilih term of payment terlebih dahulu");
+      return;
+    }
+
+    if (creditLimit <= 0) {
+      Alert.alert(
+        "Warning",
+        "Isi nominal pengajuan credit limit terlebih dahulu"
+      );
+      return;
+    }
+
+    if (kepemilikan.length == 0) {
+      Alert.alert("Warning", "Pilih kepemilikan terlebih dahulu");
+      return;
+    }
+
+    if (usahaStart == null) {
+      Alert.alert("Warning", "Isi tanggal mulai usaha terlebih dahulu");
+      return;
+    }
+
+    if (omset <= 0) {
+      Alert.alert("Warning", "Isi nominal omset terlebih dahulu");
+      return;
+    }
+
+    if (cp.length == 0) {
+      Alert.alert("Warning", "Isi CP(contact person) terlebih dahulu");
+      return;
+    }
+
+    if (phoneNoCp.length == 0) {
+      Alert.alert("Warning", "Isi Nomor CP(contact person) terlebih dahulu");
+      return;
+    }
+
+    if (cpPenagihan.length == 0) {
+      Alert.alert(
+        "Warning",
+        "Isi CP(contact person) Penagihan terlebih dahulu"
+      );
+      return;
+    }
+
+    if (phoneNoCpPenagihan.length == 0) {
+      Alert.alert(
+        "Warning",
+        "Isi Nomor CP(contact person) Penagihan terlebih dahulu"
+      );
       return;
     }
 
@@ -1128,7 +1527,7 @@ const CustomerSurvey = ({ navigation }) => {
                                   creditlimit: Number.parseFloat(
                                     creditLimit.replace(/,/g, "")
                                   ),
-                                  top: termPayment.value,
+                                  top: termPayment.id,
                                   payment: caraBayar.value,
                                   cppenagihan: cpPenagihan,
                                   cppenagihanhp: phoneNoCpPenagihan,
@@ -1215,7 +1614,7 @@ const CustomerSurvey = ({ navigation }) => {
               height: 20,
               tintColor: COLORS.gray2,
             }}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Home")}
           />
         }
         rightComponent={
@@ -1986,11 +2385,11 @@ const CustomerSurvey = ({ navigation }) => {
         />
 
         {/* TOP */}
-        {/* <FormPicker
+        <FormPicker
           label="Term of payment"
           placeholder="Pilih masa pembayaran"
           modalTitle="Pilih TOP"
-          value={dataTerm.label}
+          value={termPayment.label}
           setValue={setTermPayment}
           options={dataTerm}
           containerStyle={{
@@ -1999,7 +2398,7 @@ const CustomerSurvey = ({ navigation }) => {
           inputContainerStyle={{
             backgroundColor: COLORS.white,
           }}
-        /> */}
+        />
 
         {/* Cara Bayar */}
         <Text

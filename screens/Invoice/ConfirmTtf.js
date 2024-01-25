@@ -40,6 +40,7 @@ const ConfirmTtf = ({ navigation }) => {
   const getUser = () => {
     GetDataLocal("user").then((res) => {
       const data = res;
+      console.log("data", data);
       setProfile(data);
       cekSalesOrder(data);
     });

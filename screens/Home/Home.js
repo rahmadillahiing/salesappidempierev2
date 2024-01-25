@@ -17,7 +17,7 @@ import {
   useFocusEffect,
   useIsFocused,
 } from "@react-navigation/native";
-
+import FlashMessage, { showMessage } from "react-native-flash-message";
 import axios from "axios";
 //async storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,9 +28,12 @@ import { TextButton } from "../../components";
 import { FONTS, SIZES, COLORS, dummyData, constants } from "../../constants";
 import { useCallback } from "react";
 import moment from "moment";
-import DialogInput from "react-native-dialog-input";
+// import DialogInput from "react-native-dialog-input";
 import { NumberFormat } from "../../utils";
 import { LinearGradient } from "expo-linear-gradient";
+import { Icon } from "@rneui/themed";
+import { setSelectedTab } from "../../stores/tab/tabActions";
+
 const Section = ({ title, onPress, children }) => {
   return (
     <View>
@@ -69,10 +72,12 @@ const Home = (props) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [popular, setPopular] = useState([]);
+  const [arSalesman, setArSalesman] = useState([]);
   // const [input, setInput] = useState("");
   // const [recommends, setRecommends] = useState([]);
   const [menuList, setMenuList] = useState([]);
   const [lokasi, setLokasi] = useState(null);
+  const [arCustomer, setArCustomer] = useState([]);
   const [dt, setDt] = useState(null);
   const [tgl, setTgl] = useState(null);
   const isFocused = useIsFocused();
@@ -82,54 +87,74 @@ const Home = (props) => {
   const [additionalRmp, setAdditionalRmp] = useState(null);
   const navigation = useNavigation();
 
-  useCallback(() => {
-    // console.log("masuk sini dah ah");
-    onRefresh();
-  }, []);
+  // useCallback(() => {
+  //   // console.log("masuk sini lewat callback");
+  //   onRefresh();
+  // }, []);
 
   useEffect(() => {
     // console.log("tes isfocused", lokasi);
-    if (lokasi !== null) {
-      if (lokasi.locationIdemp !== null) {
-        cekCreditLimit(lokasi.locationIdemp);
-        // cekCreditLimitRmp(lokasi.locationIdemp);
+    GetDataLocal("lokasi").then((res) => {
+      let a = res;
+      console.log("check data local", res);
+      if (a == null) {
+        setLokasi(null);
+        setAdditional(null);
+      } else {
+        if (lokasi !== null) {
+          if (lokasi.locationIdemp !== null) {
+            cekArCustomer(lokasi.locationIdemp);
+            cekCreditLimit(lokasi.locationIdemp);
+            // cekCreditLimitRmp(lokasi.locationIdemp);
+          }
+        }
       }
-    }
-  }, [isFocused]);
+      navigation.addListener("focus", () => {
+        console.log("masuk sini refresh auto");
+        // onRefresh();
+        getUser();
+      });
+    });
+  }, [navigation]);
 
   useEffect(() => {
     handleChangeCategory(selectedCategoryId, selectedMenuType);
+    setRefreshing(false);
   }, [popular]);
 
-  useEffect(() => {
-    // console.log("pencet bro", props.selectedTab);
-    if (props.selectedTab === "Home") {
-      getAdditional();
-      getAdditionalRmp();
-      getLokasi();
-      getUser();
-    }
-  }, [props.selectedTab]);
+  // useEffect(() => {
+  //   // console.log("pencet bro", props.selectedTab);
+  //   if (props.selectedTab === "Home") {
+  //     // getAdditional();
+  //     // getAdditionalRmp();
+  //     // getLokasi();
+  //     getUser();
+  //   }
+  // }, [props.selectedTab]);
 
   useEffect(() => {
-    onRefresh();
+    // console.log("masuk lewat sono");
+    getUser();
     handleChangeCategory(selectedCategoryId, selectedMenuType);
     // handleChangeCategory(1, selectedMenuType);
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (lokasi === null) {
-        getLokasi();
-        getAdditional();
-        getAdditionalRmp();
-      }
-      // getUser();
-      // console.log("refresh", lokasi);
-      handleChangeCategory(selectedCategoryId, selectedMenuType);
-      // scheduleToday(profile.id);
-    }, [lokasi])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // console.log("refresh 1", lokasi);
+  //     if (lokasi === null) {
+  //       getLokasi();
+  //       getAdditional();
+
+  //       // getAdditionalRmp();
+  //     }
+  //     // getUser();
+  //     scheduleToday(profile.id);
+  //     // console.log("category", selectedCategoryId);
+  //     // console.log("menu", selectedMenuType);
+  //     handleChangeCategory(selectedCategoryId, selectedMenuType);
+  //   }, [lokasi])
+  // );
 
   useEffect(() => {
     let secTimer = setInterval(() => {
@@ -152,6 +177,84 @@ const Home = (props) => {
 
     return () => clearInterval(secTimer);
   }, []);
+
+  const onRefresh = () => {
+    //Clear old data of the list
+    // setPopular([]);
+    //Call the Service to get the latest data
+    // console.log("ID yg di pake", profile.id);
+    // console.log("masuk lewat refresh");
+    console.log("profile", profile);
+    if (profile.id !== "") {
+      scheduleToday(profile.id);
+      cekArPersalesman(profile.salesrep);
+      cekAbsen(profile.id);
+    }
+    getAdditional();
+    // getAdditionalRmp();
+    getLokasi();
+    handleChangeCategory(1, 1);
+  };
+
+  async function cekArPersalesman(salesman) {
+    var config2 = {
+      method: "post",
+      url:
+        constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      data: {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getOpenInvoiceArSalesman",
+            DataRow: {
+              field: [
+                {
+                  "@column": "SalesRep_ID",
+                  val: salesman,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
+      },
+    };
+
+    axios(config2).then(function async(response) {
+      // console.log("respon AR", response.data.WindowTabData.RowCount);
+      if (response.data.WindowTabData.RowCount > 0) {
+        // console.log(
+        //   "masuk itung AR",
+        //   response.data.WindowTabData.DataSet.DataRow[0]
+        // );
+        var dataAr = {
+          invoicecount:
+            response.data.WindowTabData.DataSet.DataRow.field[3].val,
+          invoicevalue:
+            response.data.WindowTabData.DataSet.DataRow.field[4].val,
+        };
+      } else {
+        var dataAr = {
+          invoicecount: 0,
+          invoicevalue: 0,
+        };
+      }
+      setArSalesman(dataAr);
+    });
+  }
 
   async function cekCreditLimitRmp(bpid) {
     // console.log("bpid", bpid);
@@ -207,8 +310,61 @@ const Home = (props) => {
     });
   }
 
+  function cekArCustomer(bpid) {
+    var config2 = {
+      method: "post",
+      url:
+        constants.idempServerBpr +
+        "ADInterface/services/rest/model_adservice/query_data",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      data: {
+        ModelCRUDRequest: {
+          ModelCRUD: {
+            serviceType: "getArPercustomer",
+            DataRow: {
+              field: [
+                {
+                  "@column": "C_BPartner_ID",
+                  val: bpid,
+                },
+              ],
+            },
+          },
+          ADLoginRequest: {
+            user: "belitangSales",
+            pass: "Sales100%",
+            lang: "en_US",
+            ClientID: "1000003",
+            RoleID: "1000006",
+            OrgID: "0",
+            WarehouseID: "0",
+            stage: "9",
+          },
+        },
+      },
+    };
+
+    axios(config2).then(function async(response) {
+      if (response.data.WindowTabData.RowCount > 0) {
+        let customerar = [];
+
+        customerar.push({
+          hitunginv: response.data.WindowTabData.DataSet.DataRow.field[1].val,
+          totalinv: response.data.WindowTabData.DataSet.DataRow.field[2].val,
+        });
+        setArCustomer(customerar);
+        console.log("ar customer", customerar);
+      } else {
+        setArCustomer([]);
+      }
+    });
+  }
+
   async function cekCreditLimit(bpid) {
-    // console.log("bpid", bpid);
+    console.log("bpid", bpid);
     var config2 = {
       method: "post",
       url:
@@ -246,14 +402,6 @@ const Home = (props) => {
     };
 
     axios(config2).then(function async(response) {
-      // console.log(
-      //   "cek CL",
-      //   response.data.WindowTabData.DataSet.DataRow.field.val
-      // );
-      // setAdditional({
-      //   ...additional,
-      //   cl: response.data.WindowTabData.DataSet.DataRow.field.val,
-      // });
       persistAdditional(
         additional,
         response.data.WindowTabData.DataSet.DataRow.field.val
@@ -262,7 +410,7 @@ const Home = (props) => {
   }
 
   const persistAdditional = async (additional, newAdditional) => {
-    // console.log("tes masuk 1 ", additional);
+    console.log("tes masuk 1 ", additional);
 
     // console.log("tes masuk 2 ", newAdditional);
 
@@ -313,16 +461,21 @@ const Home = (props) => {
         ("0" + (tgl.getMonth() + 1)).slice(-2) +
         "-" +
         ("0" + tgl.getDate()).slice(-2);
+      // console.log("result home", res);
       if (res !== null) {
         if (checkdate != res.tanggal) {
           cleartgl();
         } else {
+          cekArCustomer(res.locationIdemp);
           setLokasi(res);
         }
         // } else {
         //   // console.log("masuk sini cari user");
         //   getUser();
         //   // cekLastCheckin();
+      } else {
+        cleartgl();
+        // onRefresh()
       }
     });
   };
@@ -343,10 +496,15 @@ const Home = (props) => {
   const getUser = async () => {
     await GetDataLocal("user").then((res) => {
       const data = res;
-      // console.log("dari user");
+      // console.log("dari user", res);
       scheduleToday(res.id);
       setProfile(data);
+      cekArPersalesman(res.salesrep);
+      cekAbsen(res.id);
       // cekLastCheckin(res.id);
+      getAdditional();
+      getLokasi();
+      handleChangeCategory(1, 1);
     });
   };
 
@@ -355,6 +513,7 @@ const Home = (props) => {
       .then(() => {
         setLokasi(null);
         setAdditional(null);
+        setArCustomer([]);
         AsyncStorage.removeItem("todos");
         AsyncStorage.removeItem("retur");
         AsyncStorage.removeItem("sales");
@@ -435,11 +594,40 @@ const Home = (props) => {
         ]
       );
     } else {
-      setVisible(true);
-      renderReasonout();
+      // console.log("tes masuk sini");
+      {
+        navigation.navigate("CheckOut");
+      } // setVisible(true);
+      // renderReasonout();
     }
   };
   // Handler
+
+  const cekAbsen = async (nik) => {
+    console.log("nik", nik);
+    const response = await axios.get(
+      constants.inhouseServer + `getbakneedrevision?userid=${nik}`
+    );
+    // setDataAbsensi(response.data.result);
+    // console.log("absensi", response.data.result.length);
+    if (response.data.result.length > 0) {
+      showMessage({
+        message: "Ada Absen Tidak Lengkap",
+        description:
+          "Ajukan perbaikan di hai.sep-food.com, detail ada di menu Notification",
+        type: "warning",
+        duration: 4000,
+        icon: () => (
+          <Icon
+            name="warning"
+            size={20}
+            color="#aa2020"
+            style={{ paddingRight: 20, paddingTop: 14 }}
+          />
+        ),
+      });
+    }
+  };
 
   function handleChangeCategory(categoryId, menuTypeId) {
     let selectedMenu = popular;
@@ -462,29 +650,15 @@ const Home = (props) => {
         // return Promise.reject(error);
         console.log("error");
         return;
+      } else {
+        // console.log("schedule", foundschedule);
+        setPopular(foundschedule);
       }
       // console.log("Data schedule", foundschedule);
       // setRecommends(foundschedule);
-      setPopular(foundschedule);
       setRefreshing(false);
       // handleChangeCategory(1, 1);
     });
-  };
-
-  const onRefresh = () => {
-    //Clear old data of the list
-    // setPopular([]);
-    //Call the Service to get the latest data
-    // console.log("ID yg di pake", profile.id);
-    // console.log("masuk lewat refresh");
-    // console.log("profile", profile);
-    if (profile.id !== "") {
-      scheduleToday(profile.id);
-    }
-    getAdditional();
-    // getAdditionalRmp();
-    getLokasi();
-    handleChangeCategory(1, 1);
   };
 
   // Render
@@ -662,8 +836,26 @@ const Home = (props) => {
   function renderCl() {
     return (
       <View>
-        <Text style={{ color: COLORS.darkGray2, ...FONTS.body4 }}>
-          Kredit limit : {NumberFormat(additional.clavailable.toString())}
+        <Text
+          style={{
+            alignItems: "flex-start",
+            color: COLORS.darkGray2,
+            ...FONTS.body4,
+          }}
+        >
+          Overdue : {arCustomer[0].hitunginv} Invoice
+        </Text>
+        <Text
+          style={{
+            alignItems: "flex-end",
+            color: COLORS.darkGray2,
+            ...FONTS.body4,
+          }}
+        >
+          Total :Rp.{" "}
+          {arCustomer[0].totalinv > 0
+            ? NumberFormat(arCustomer[0].totalinv).toString()
+            : 0}
         </Text>
       </View>
     );
@@ -684,7 +876,7 @@ const Home = (props) => {
       <View
         style={{
           flex: 1,
-          marginBottom: SIZES.padding,
+          marginBottom: SIZES.radius,
           padding: SIZES.radius,
           borderBottomLeftRadius: SIZES.radius,
           borderBottomRightRadius: SIZES.radius,
@@ -708,9 +900,14 @@ const Home = (props) => {
               <Text style={{ ...FONTS.h4 }} numberOfLines={1}>
                 Lokasi : {lokasi.customer}
               </Text>
-              {additional === null || additional.cl === undefined
-                ? renderClKosong()
-                : renderCl()}
+              {additional === null || additional.cl === undefined ? (
+                // ? renderClKosong()
+                <></>
+              ) : arCustomer.length > 0 ? (
+                renderCl()
+              ) : (
+                <Text>Tidak ada overdue</Text>
+              )}
               <Text style={{ color: COLORS.darkGray2, ...FONTS.body4 }}>
                 Check in : {lokasi.waktuin}
               </Text>
@@ -750,6 +947,40 @@ const Home = (props) => {
             {lokasi === null ? renderLokasi() : renderLokasiOut()}
           </View>
           <View style={{ flex: 4, zIndex: 2 }}>
+            {arSalesman.invoicecount > 0 ? (
+              <View
+                style={{
+                  backgroundColor: COLORS.red,
+                  marginTop: -5,
+                  marginBottom: 10,
+                  borderRadius: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: COLORS.white2,
+                    ...FONTS.body4,
+                    marginLeft: SIZES.radius,
+                  }}
+                >
+                  Total Invoice Due Date : {arSalesman.invoicecount} Invoice
+                </Text>
+                <Text
+                  style={{
+                    color: COLORS.white2,
+                    ...FONTS.body4,
+                    marginLeft: SIZES.radius,
+                  }}
+                >
+                  Nilai Invoice Due Date :Rp.{" "}
+                  {arSalesman.invoicevalue > 0
+                    ? NumberFormat(arSalesman.invoicevalue).toString()
+                    : 0}
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
             {/* List */}
             <FlatList
               data={menuList}
@@ -801,6 +1032,7 @@ const Home = (props) => {
           </View>
         </ImageBackground>
       </LinearGradient>
+      <FlashMessage position={"top"} duration={3000} />
     </SafeAreaView>
   );
 };

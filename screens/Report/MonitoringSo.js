@@ -89,8 +89,8 @@ const MonitoringSo = ({ navigation }) => {
         if (hitungso === 1) {
           sodata.push({
             id:
-              response.data.WindowTabData.DataSet.DataRow.field[0].val +
-              response.data.WindowTabData.DataSet.DataRow.field[7].val,
+              response.data.WindowTabData.DataSet.DataRow.field[0].val.toString() +
+              response.data.WindowTabData.DataSet.DataRow.field[7].val.toString(),
             status: response.data.WindowTabData.DataSet.DataRow.field[4].val,
             tglorder: response.data.WindowTabData.DataSet.DataRow.field[2].val,
             grandtotal:
@@ -105,8 +105,12 @@ const MonitoringSo = ({ navigation }) => {
           for (var i = 0; i < hitungso; i++) {
             sodata.push({
               id:
-                response.data.WindowTabData.DataSet.DataRow[i].field[0].val +
-                response.data.WindowTabData.DataSet.DataRow[i].field[7].val,
+                response.data.WindowTabData.DataSet.DataRow[
+                  i
+                ].field[0].val.toString() +
+                response.data.WindowTabData.DataSet.DataRow[
+                  i
+                ].field[7].val.toString(),
               status:
                 response.data.WindowTabData.DataSet.DataRow[i].field[4].val,
               tglorder:
