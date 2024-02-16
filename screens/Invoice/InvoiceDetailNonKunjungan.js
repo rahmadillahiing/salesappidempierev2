@@ -421,12 +421,12 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
         {/*  Info */}
         <View
           style={{
-            marginTop: SIZES.padding,
+            marginTop: 10,
             backgroundColor: COLORS.lightGray1,
             padding: 2,
             borderRadius: 5,
             flex: 1,
-            height: 150,
+            height: 170,
           }}
         >
           <Text
@@ -445,13 +445,13 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
               alignItems: "center",
             }}
           >
-            <Text
+            {/* <Text
               style={{
                 ...FONTS.h4,
               }}
             >
               No Invoice : {""}
-            </Text>
+            </Text> */}
             <Text
               style={{
                 ...FONTS.h2,

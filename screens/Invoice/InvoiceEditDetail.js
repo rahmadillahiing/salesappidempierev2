@@ -30,7 +30,7 @@ const InvoiceEditDetail = ({ navigation, route }) => {
   useEffect(() => {
     let detailItem = route.params;
     setDataInvoiceHeader(detailItem.detailItem);
-    // console.log(detailItem.detailItem.invoice);
+    console.log(detailItem.detailItem.invoice);
     cekdetail(detailItem.detailItem.invoice.key);
   }, []);
 

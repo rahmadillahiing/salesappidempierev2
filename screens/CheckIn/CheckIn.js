@@ -392,7 +392,16 @@ const CheckIn = ({ navigation }) => {
   };
 
   const getLokasi = async (result) => {
-    // console.log("Cek user", result);
+    console.log("Cek user", result.jobid);
+    let kolom = "";
+    let parameter = "";
+    if (result.jobid == 1000006) {
+      kolom = "SalesRep_ID";
+      parameter = result.salesrep;
+    } else {
+      kolom = "C_SalesRegion_ID";
+      parameter = result.region;
+    }
     // idempiere
     const response = await axios.post(
       constants.idempServerBpr +
@@ -404,9 +413,13 @@ const CheckIn = ({ navigation }) => {
             DataRow: {
               field: [
                 {
-                  "@column": "C_SalesRegion_ID",
-                  val: result.region,
+                  "@column": kolom,
+                  val: parameter,
                 },
+                // {
+                //   "@column": "C_SalesRegion_ID",
+                //   val: result.region,
+                // },
                 // {
                 //   "@column": "SalesRep_ID",
                 //   val: result.salesrep,

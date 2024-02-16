@@ -35,7 +35,7 @@ const BillingInvoice = () => {
 
   const getInvoice = (props) => {
     const url = constants.loginServer + `/getdatainvoiceheader?filter=${props}`;
-    // console.log("url", url);
+    console.log("url", url);
     fetch(url).then(async (response) => {
       const isJson = response.headers
         .get("content-type")

@@ -20,6 +20,7 @@ const FormInput = ({
   errorMsg = "",
   maxLength,
   editable = true,
+  textAlign = "left",
 }) => {
   return (
     <View style={{ ...containerStyle }}>
@@ -52,6 +53,8 @@ const FormInput = ({
           autoCapitalize={autoCapitalize}
           maxLength={maxLength}
           onChangeText={(text) => onChange(text)}
+          textAlign={textAlign}
+          selectTextOnFocus
         />
         {appendComponent}
       </View>

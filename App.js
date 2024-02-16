@@ -12,6 +12,7 @@ import thunk from "redux-thunk";
 import rootReducer from "./stores/rootReducer";
 
 import {
+  CreditLimit,
   Retur,
   SalesOrderBeras,
   SalesOrderBihun,
@@ -159,6 +160,8 @@ const App = () => {
           />
 
           <Stack.Screen name="CustomerSurvey" component={CustomerSurvey} />
+
+          <Stack.Screen name="CreditLimit" component={CreditLimit} />
 
           <Stack.Screen name="MonitoringSo" component={MonitoringSo} />
 

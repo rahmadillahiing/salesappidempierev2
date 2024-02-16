@@ -18,13 +18,20 @@ import React, { useEffect, useState, useRef } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
 import axios from "axios";
 
-import { FormDateInput, Header, IconButton } from "../../components";
+import {
+  FormDateInput,
+  Header,
+  IconButton,
+  LineDivider,
+} from "../../components";
 import { SIZES, icons, images, COLORS, constants } from "../../constants";
 import { GetDataLocal, NumberFormat } from "../../utils";
 import RadioGroup from "react-native-radio-buttons-group";
 import moment from "moment";
 
-const InvoiceEditHeader = ({ navigation }) => {
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+
+const InvoiceEditHeader = () => {
   const [profile, setProfile] = useState("");
   const [gagalKunjung, setGagalKunjung] = useState("");
   const [selectedTgl, setSelectedTgl] = useState(null);
@@ -32,15 +39,25 @@ const InvoiceEditHeader = ({ navigation }) => {
 
   const [dataGagalKunjungan, setDataGagalKunjungan] = useState([]);
   const [dataInvoice, setDataInvoice] = useState([]);
+  const [cash, setCash] = useState(0);
+  const [bankTransfer, setBankTransfer] = useState(0);
+  const [cekGiro, setCekGiro] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   const flatListRef = useRef();
   const [modalVisible, setModalVisible] = useState(false);
   const [dtVisible, setDtVisible] = useState(false);
 
+  const isFocused = useIsFocused();
+  const navigation = useNavigation();
+
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    isFocused && getUser();
+  }, [isFocused]);
 
   const getUser = () => {
     GetDataLocal("user").then((res) => {
@@ -60,19 +77,51 @@ const InvoiceEditHeader = ({ navigation }) => {
       )
       .then((response) => {
         const hitunginvoice = response.data.length;
-        // console.log("response", response.data);
+        console.log("response", response.data);
         let datainvoice = [];
+        let cash = 0;
+        let banktransfer = 0;
+        let cekgiro = 0;
+        let previnvoice = "";
         for (var i = 0; i < hitunginvoice; i++) {
-          datainvoice.push({
-            key: response.data[i].inv_id,
-            noinv: response.data[i].inv_number,
-            lokasi: response.data[i].TaskAssignLine_CustomerName,
-            total: response.data[i].inv_total,
-            status: response.data[i].status,
-          });
-          setDataInvoice(datainvoice);
-          // console.log("data", datainvoice);
+          if (previnvoice !== response.data[i].inv_number) {
+            datainvoice.push({
+              key: response.data[i].inv_id,
+              noinv: response.data[i].inv_number,
+              lokasi: response.data[i].TaskAssignLine_CustomerName,
+              total: response.data[i].inv_total,
+              status: response.data[i].status,
+              paymenttype: response.data[i].pinv_paymenttype,
+              payment:
+                response.data[i].pinv_payment == null
+                  ? 0
+                  : response.data[i].pinv_payment,
+            });
+          } else {
+            datainvoice.forEach((obj) => {
+              if (obj.noinv == previnvoice) {
+                obj.payment = obj.payment + response.data[i].pinv_payment;
+              }
+            });
+          }
+          previnvoice = response.data[i].inv_number;
+          if (response.data[i].pinv_paymenttype == "CASH") {
+            cash = cash + response.data[i].pinv_payment;
+          } else if (response.data[i].pinv_paymenttype == "BANK TRANSFER") {
+            banktransfer = banktransfer + response.data[i].pinv_payment;
+          } else if (response.data[i].pinv_paymenttype == "GIRO/CEK") {
+            cekgiro = cekgiro + response.data[i].pinv_payment;
+          }
         }
+        console.log("data invoice", datainvoice);
+        console.log("data cash", cash);
+        console.log("data bank transfer", banktransfer);
+        console.log("data giro", cekgiro);
+
+        setDataInvoice(datainvoice);
+        setCash(cash);
+        setBankTransfer(banktransfer);
+        setCekGiro(cekgiro);
       });
   }
 
@@ -372,6 +421,19 @@ const InvoiceEditHeader = ({ navigation }) => {
           >
             Tagihan : Rp.{NumberFormat(invoice?.total.toString())}
           </Text>
+
+          <Text
+            style={{
+              // fontWeight: "bold",
+              fontSize: 14,
+              color: "#1f145c",
+              // textDecorationLine: todo?.completed ? "line-through" : "none",
+              alignItems: "flex-end",
+              alignContent: "flex-end",
+            }}
+          >
+            Tertagih : Rp.{NumberFormat(invoice?.payment.toString())}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -404,6 +466,36 @@ const InvoiceEditHeader = ({ navigation }) => {
               ? "Tidak ada data invoice"
               : "Data Invoice"}
           </Text>
+          <Text style={{ color: COLORS.green, fontSize: 14, left: 10 }}>
+            {/* {console.log("total tampilan :", cash)} */}
+            {dataInvoice.length > 0 &&
+              "Total Cash Rp." + NumberFormat(cash.toString())}
+          </Text>
+          <LineDivider
+            lineStyle={{
+              backgroundColor: COLORS.red2,
+            }}
+          />
+          <Text style={{ color: COLORS.green, fontSize: 14, left: 10 }}>
+            {/* {console.log("total tampilan :", cash)} */}
+            {dataInvoice.length > 0 &&
+              "Total Transfer Rp." + NumberFormat(bankTransfer.toString())}
+          </Text>
+          <LineDivider
+            lineStyle={{
+              backgroundColor: COLORS.red2,
+            }}
+          />
+          <Text style={{ color: COLORS.green, fontSize: 14, left: 10 }}>
+            {/* {console.log("total tampilan :", cash)} */}
+            {dataInvoice.length > 0 &&
+              "Total Cek Dan Giro Rp." + NumberFormat(cekGiro.toString())}
+          </Text>
+          <LineDivider
+            lineStyle={{
+              backgroundColor: COLORS.red2,
+            }}
+          />
           <FlatList
             keyExtractor={(item) => `${item.key}`}
             showsVerticalScrollIndicator={false}

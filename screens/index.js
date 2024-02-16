@@ -100,7 +100,11 @@ import MonitoringSoDetail from "./Report/MonitoringSoDetail";
 //dashboard detail
 import DashboardDetail from "./DashboardDetail/DashboardDetail";
 
+//Pengajuan Credit limit
+import CreditLimit from "./CreditLimit/CreditLimit";
+
 export {
+  CreditLimit,
   DashboardDetail,
   MonitoringSo,
   MonitoringSoDetail,

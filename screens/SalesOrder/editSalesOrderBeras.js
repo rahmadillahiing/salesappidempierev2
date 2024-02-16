@@ -13,16 +13,22 @@ import {
 } from "../../constants";
 import axios from "axios";
 import { GetDataLocal } from "../../utils";
-import moment from "moment";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
-const EditOrderSalesBeras = ({ navigation }) => {
+const EditOrderSalesBeras = () => {
+  const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = React.useState("history");
   const [orders, setOrders] = React.useState([]);
   const [profile, setProfile] = useState("");
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    isFocused && getUser();
+  }, [isFocused]);
 
   //   useEffect(() => {
   //     const getSalesHeader = async () => {
@@ -43,11 +49,16 @@ const EditOrderSalesBeras = ({ navigation }) => {
   //   }, []);
 
   const getSalesHeader = async (id) => {
+    console.log(
+      "a",
+      constants.CashColServer + `/api/v1/salesorder/salesheader/${id}/draft`
+    );
     await axios
       .get(
         constants.CashColServer + `/api/v1/salesorder/salesheader/${id}/draft`
       )
       .then(function (response) {
+        // console.log("data", response.data.data);
         setOrders(response.data);
       })
       .catch((error) => {
@@ -124,7 +135,7 @@ const EditOrderSalesBeras = ({ navigation }) => {
             borderRadius: SIZES.radius,
             backgroundColor:
               selectedTab == "history"
-                ? COLORS.primary
+                ? COLORS.red
                 : COLORS.transparentPrimary9,
           }}
           label="History"

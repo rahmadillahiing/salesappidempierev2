@@ -714,16 +714,16 @@ const SalesOrderBeras = ({ navigation }) => {
         },
       },
     };
-    // axios(config2).then(function async(response) {
-    //   console.log("total AR customer", response.data.WindowTabData.RowCount);
-    //   if (response.data.WindowTabData.RowCount > 0) {
-    //     Alert.alert(
-    //       "Informasi",
-    //       "Ada Invoice jatuh tempo, tidak bisa melakukan SO"
-    //     );
-    //     navigation.navigate("MainLayout");
-    //   }
-    // });
+    axios(config2).then(function async(response) {
+      // console.log("total AR customer", response.data.WindowTabData.RowCount);
+      if (response.data.WindowTabData.RowCount > 0) {
+        Alert.alert(
+          "Informasi",
+          "Ada Invoice jatuh tempo, tidak bisa melakukan SO"
+        );
+        navigation.navigate("MainLayout");
+      }
+    });
   }
 
   async function getListPrice(data2) {
@@ -768,7 +768,7 @@ const SalesOrderBeras = ({ navigation }) => {
     await GetDataLocal("lokasi").then((res) => {
       if (res !== null) {
         lokasitemp = res;
-        console.log("lokasi awal", lokasitemp);
+        // console.log("lokasi awal", lokasitemp);
         setLokasi(res);
       }
     });
@@ -778,13 +778,13 @@ const SalesOrderBeras = ({ navigation }) => {
         // console.log("cek cache sales", res2);
         if (res2 !== null) {
           setNoso(res2[0].noso);
-          console.log("load dari storage", res2[0].noso);
+          // console.log("load dari storage", res2[0].noso);
         } else {
           let soNumber =
             moment(new Date()).format("YYYYMMDDHHmmss").toString() +
             lokasitemp.salesrep.toString() +
             lokasitemp.locationIdemp.toString();
-          console.log("nomor baru", soNumber);
+          // console.log("nomor baru", soNumber);
           setNoso(soNumber);
         }
       });
@@ -916,7 +916,7 @@ const SalesOrderBeras = ({ navigation }) => {
   const getSuggestions = useCallback(
     async (q) => {
       const filterToken = q.toLowerCase();
-      console.log("getSuggestions", q);
+      // console.log("getSuggestions", q);
       if (typeof q !== "string" || q.length < 3) {
         setSuggestionsList(null);
 
@@ -924,7 +924,7 @@ const SalesOrderBeras = ({ navigation }) => {
       }
       setLoading(true);
       // const response = await fetch(constants.loginServer + "/getproductfg");
-      console.log("product tersedia", listProductAvailable);
+      // console.log("product tersedia", listProductAvailable);
       const items = listProductAvailable;
       // console.log("item cari", listProductAvailable);
       const suggestions = items
@@ -1093,6 +1093,8 @@ const SalesOrderBeras = ({ navigation }) => {
               DeliveryViaRule:
                 oaYesNo === true && ongkosAngkut !== 0 ? "D" : "P",
               C_BPartner_Name: lokasi.customer,
+              user: lokasi.nama,
+              pwd: lokasi.pass,
             });
             // console.log("header so", dataSoHeader);
             // console.log("detail so", dataSoDetail);
@@ -1751,17 +1753,21 @@ const SalesOrderBeras = ({ navigation }) => {
               marginTop: 5,
             }}
           >
-            <View>
-              <CustomSwitch
-                label="Ongkos Angkut"
-                additional={oaYesNo ? ongkosAngkut.toString() : "0"}
-                value={oaYesNo}
-                onChange={(value) => {
-                  setOaYesNo(value);
-                  hitungulang(value);
-                }}
-              />
-            </View>
+            {ongkosAngkut === 0 ? (
+              <></>
+            ) : (
+              <View>
+                <CustomSwitch
+                  label="Ongkos Angkut"
+                  additional={oaYesNo ? ongkosAngkut.toString() : "0"}
+                  value={oaYesNo}
+                  onChange={(value) => {
+                    setOaYesNo(value);
+                    hitungulang(value);
+                  }}
+                />
+              </View>
+            )}
             <View
               style={{
                 flex: 1,

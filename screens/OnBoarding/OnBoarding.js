@@ -55,27 +55,27 @@ const OnBoarding = ({ navigation }) => {
 
       //return intCompare;
 
-      if (intCompare == -1) {
-        let mismatch = await showAlertMismatchVersion();
-        if (mismatch) {
-          clearLogin();
-          setIsLoading(false);
-          BackHandler.exitApp();
-        }
-      } else {
-        if (intCompare == 1) {
-          let mismatch = await showAlertMismatchVersion();
-          if (mismatch) {
-            clearLogin();
-            setIsLoading(false);
-            BackHandler.exitApp();
-          }
-        } else {
-          setIsLoading(false);
-          // bootstrapAsync();
-          return;
-        }
-      }
+      // if (intCompare == -1) {
+      //   let mismatch = await showAlertMismatchVersion();
+      //   if (mismatch) {
+      //     clearLogin();
+      //     setIsLoading(false);
+      //     BackHandler.exitApp();
+      //   }
+      // } else {
+      //   if (intCompare == 1) {
+      //     let mismatch = await showAlertMismatchVersion();
+      //     if (mismatch) {
+      //       clearLogin();
+      //       setIsLoading(false);
+      //       BackHandler.exitApp();
+      //     }
+      //   } else {
+      //     setIsLoading(false);
+      //     // bootstrapAsync();
+      //     return;
+      //   }
+      // }
     };
 
     checkingVersion();

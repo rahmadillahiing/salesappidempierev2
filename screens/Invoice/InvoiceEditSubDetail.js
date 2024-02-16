@@ -155,13 +155,6 @@ const InvoiceEditSubDetail = ({ navigation, route }) => {
           >
             <Text
               style={{
-                ...FONTS.h4,
-              }}
-            >
-              No Invoice : {""}
-            </Text>
-            <Text
-              style={{
                 ...FONTS.h2,
               }}
             >

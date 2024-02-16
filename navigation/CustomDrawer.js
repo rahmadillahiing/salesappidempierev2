@@ -78,7 +78,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
   const getUser = () => {
     GetDataLocal("user").then((res) => {
       const data = res;
-      // console.log("profile di button", res);
+      console.log("profile di button", data);
       setProfile(data);
       cekArPersalesman(res.salesrep);
     });
@@ -133,7 +133,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
             response.data.WindowTabData.DataSet.DataRow.field[4].val,
         };
       } else {
-        console.log("masuk 0");
+        // console.log("masuk 0");
         var dataAr = {
           invoicecount: 0,
           invoicevalue: 0,
@@ -398,6 +398,15 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                   onPress={() => {
                     navigation.closeDrawer();
                     navigation.navigate("CustomerSurvey");
+                  }}
+                />
+
+                <CustomDrawerItem
+                  label="Kenaikan CL"
+                  icon={icons.bar}
+                  onPress={() => {
+                    navigation.closeDrawer();
+                    navigation.navigate("CreditLimit");
                   }}
                 />
 

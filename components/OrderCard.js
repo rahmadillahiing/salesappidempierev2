@@ -13,7 +13,7 @@ const OrderCard = ({ orderItem, profile }) => {
 
   console.log("order", orderItem);
 
-  console.log("profile", profile);
+  // console.log("profile", profile);
 
   function getStatus() {
     if (orderItem.status == "D") {
@@ -26,39 +26,6 @@ const OrderCard = ({ orderItem, profile }) => {
       return "Expired";
     }
   }
-
-  // async function cancelSo(order) {
-  //   console.log("data", order);
-
-  //   Alert.alert(
-  //     "Reject Sales Order?",
-  //     "Cancel Sales Order " + order.name + " tanggal" + order.orderdate + "?",
-  //     [
-  //       {
-  //         text: "Yes",
-  //         onPress: async () => {
-  //           axios
-  //             .get(
-  //               constants.CashColServer +
-  //                 `/api/v1/salesorder/salesheader/${order.orderid}/cancelso`
-  //             )
-  //             .then(function (response) {
-  //               Alert.alert("Data SO terupdate", response, [{ text: "Okay" }]);
-  //             })
-  //             .catch((error) => {
-  //               console.log("error update", error);
-  //             });
-  //         },
-  //       },
-  //       {
-  //         text: "No",
-  //         onPress: () => {
-  //           return;
-  //         },
-  //       },
-  //     ]
-  //   );
-  // }
 
   return (
     <View
@@ -143,6 +110,18 @@ const OrderCard = ({ orderItem, profile }) => {
               ...FONTS.body4,
             }}
           />
+          {orderItem.alasanspv !== null && (
+            <Text
+              style={{
+                color: COLORS.red,
+                ...FONTS.body4,
+                fontSize: 12,
+                lineHeight: 20,
+              }}
+            >
+              {orderItem.alasanspv}
+            </Text>
+          )}
         </View>
 
         {/* Price / Order no */}
@@ -151,44 +130,60 @@ const OrderCard = ({ orderItem, profile }) => {
             style={{
               color: COLORS.primary,
               ...FONTS.h2,
-              fontSize: 18,
-              lineHeight: 0,
+              fontSize: 12,
+              lineHeight: 1,
             }}
           >
-            {["C", "D"].includes(orderItem.status)
-              ? `$${orderItem.price.toFixed(2)}`
-              : `#${orderItem.id}`}
+            {["R"].includes(orderItem.status) && `${orderItem.alasan}`}
           </Text>
         </View> */}
       </View>
 
       {/* Buttons */}
-      <View
-        style={{
-          flexDirection: "row",
-          marginTop: SIZES.radius,
-        }}
-      >
-        {orderItem.status === "D" && (
-          <>
-            <TextButton
-              buttonContainerStyle={{
-                ...styles.textButtonContainer,
-                backgroundColor: COLORS.primary,
-              }}
-              label="Lihat Detail"
-              labelStyle={{
-                ...FONTS.h4,
-              }}
-              onPress={() =>
-                navigation.navigate("DetailEditSoBeras", {
-                  detailItem: {
-                    orderItem,
-                  },
-                })
-              }
-            />
-            {/* <TextButton
+      {orderItem.status == "R" ? (
+        <View
+          style={{
+            marginHorizontal: SIZES.body1,
+          }}
+        >
+          <Text
+            style={{
+              color: COLORS.red,
+              ...FONTS.body4,
+              fontSize: 12,
+              lineHeight: 20,
+            }}
+          >
+            {["R"].includes(orderItem.status) && `${orderItem.alasan}`}
+          </Text>
+        </View>
+      ) : (
+        <View
+          style={{
+            flexDirection: "row",
+            marginTop: SIZES.radius,
+          }}
+        >
+          {orderItem.status === "D" && (
+            <>
+              <TextButton
+                buttonContainerStyle={{
+                  ...styles.textButtonContainer,
+                  backgroundColor: COLORS.primary,
+                }}
+                label="Lihat Detail"
+                labelStyle={{
+                  ...FONTS.h4,
+                }}
+                onPress={() =>
+                  navigation.navigate("DetailEditSoBeras", {
+                    detailItem: {
+                      orderItem,
+                    },
+                  })
+                }
+              />
+              {/* <TextButton
                 buttonContainerStyle={{
                   ...styles.textButtonContainer,
                   backgroundColor: COLORS.transparentPrimary9,
@@ -203,9 +198,10 @@ const OrderCard = ({ orderItem, profile }) => {
                   cancelSo(orderItem);
                 }}
               /> */}
-          </>
-        )}
-      </View>
+            </>
+          )}
+        </View>
+      )}
     </View>
   );
 };

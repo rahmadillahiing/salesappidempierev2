@@ -31,7 +31,7 @@ import moment from "moment";
 const DetailEditSoBeras = ({ navigation, route }) => {
   const flatListRef = useRef();
 
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
   const [listProductAvailable, setListProductAvailable] = useState([]);
 
   const [todos, setTodos] = useState([]);
@@ -61,13 +61,14 @@ const DetailEditSoBeras = ({ navigation, route }) => {
 
   React.useEffect(() => {
     let { detailItem } = route.params;
-    console.log("detail beras", detailItem);
+    // console.log("detail beras", detailItem.orderItem);
 
     if (detailItem.orderItem.orderid !== "") {
       setNoso(detailItem.orderItem.orderid);
       setDetailData(detailItem.orderItem);
       getLokasi(detailItem.orderItem.partnerid);
       getDetailProduct(detailItem.orderItem.orderid);
+      //   setIsloading(false);
     }
   }, []);
 
@@ -78,7 +79,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
           `/api/v1/salesorder/salesheader/${orderid}/detailproduct`
       )
       .then(function (response) {
-        console.log("data detail", response.data);
+        // console.log("data detail", response.data);
         let datadetail = response.data;
 
         if (datadetail.length > 0) {
@@ -99,14 +100,15 @@ const DetailEditSoBeras = ({ navigation, route }) => {
               oa: datadetail[i].OngkosAngkut,
               idempid: datadetail[i].M_Product_ID,
               addcost: datadetail[i].SubsidiAmt,
-              categori: "",
-              unit: "Zak",
+              categori: datadetail[i].category,
+              unit: datadetail[i].uomname,
               unitid: datadetail[i].C_UOM_ID,
             });
           }
           //   console.log("data SO", dataso);
           setTodos(dataso);
           saveTodoToUserDevice(dataso);
+          setIsloading(false);
         }
       })
       .catch((error) => {
@@ -200,7 +202,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
     let totalhitung = 0;
     let totalhitungberat = 0;
     todos.forEach((obj) => {
-      console.log("object", obj);
+      //   console.log("object", obj);
       totalhitung =
         totalhitung +
         Number.parseFloat(obj.qty) * Number.parseFloat(obj.harga) +
@@ -285,7 +287,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
     setLokasiData(dataLokasi);
 
     if (dataLokasi.length > 0) {
-      console.log("data", dataLokasi);
+      //   console.log("data", dataLokasi);
       axios
         .all([
           getOngkosAngkut(dataLokasi[0].oa),
@@ -904,13 +906,59 @@ const DetailEditSoBeras = ({ navigation, route }) => {
     setHarga(NumberFormat(harga));
   };
 
+  async function batalSo(order) {
+    // console.log("data", order);
+
+    Alert.alert(
+      "Reject Sales Order?",
+      "Cancel Sales Order " +
+        order.orderid +
+        " tanggal " +
+        order.orderdate +
+        "?",
+      [
+        {
+          text: "Yes",
+          onPress: async () => {
+            setIsloading(true);
+            axios
+              .get(
+                constants.CashColServer +
+                  `/api/v1/salesorder/salesheader/${order.orderid}/cancelso`
+              )
+              .then(function (response) {
+                // console.log("batal so", response.data);
+                Alert.alert("Data SO Dibatalkan", response.data.msg, [
+                  { text: "Okay" },
+                ]);
+                setIsloading(false);
+                setTodos([]);
+                navigation.navigate("EditSalesOrderBeras");
+              })
+              .catch((error) => {
+                setIsloading(false);
+                console.log("error update", error);
+              });
+          },
+        },
+        {
+          text: "No",
+          onPress: () => {
+            return;
+          },
+        },
+      ]
+    );
+  }
+
   async function simpanSo() {
     if (todos.length === 0) {
       Alert.alert("Input produk terlebih dahulu", "", [{ text: "Okay" }]);
       return;
     }
+    // console.log("list order", todos);
     Alert.alert(
-      "Simpan Sales Order?",
+      "Ubah data Sales Order?",
       "Apakah anda yakin ingin menyimpan SO?",
       [
         {
@@ -948,22 +996,26 @@ const DetailEditSoBeras = ({ navigation, route }) => {
                 category: element.categori,
               });
             });
-            console.log("detail so", dataSoDetail);
+            // console.log("detail so", dataSoDetail);
             const options = {
               detail: dataSoDetail,
             };
-            console.log("datanya", options);
-            // console.log("http://localhost:3001/api/v1/salesorder-submit");
+            // console.log("datanya", options);
+            // console.log("http://localhost:3001/api/v1/submitupdatedetail");
             axios
               .post(
-                constants.CashColServer + "/api/v1/salesorder/submit",
+                constants.CashColServer +
+                  "/api/v1/salesorder/submitupdatedetail",
                 options
               )
               .then((response) => {
-                console.log("status", response);
-                Alert.alert("Data SO Tersimpan", "", [{ text: "Okay" }]);
+                // console.log("status", response);
+                Alert.alert("Data SO Terupdate", response.data.msg, [
+                  { text: "Okay" },
+                ]);
                 setIsloading(false);
                 setTodos([]);
+                navigation.navigate("EditSalesOrderBeras");
               });
           },
         },
@@ -1028,19 +1080,31 @@ const DetailEditSoBeras = ({ navigation, route }) => {
             </View>
             <View
               style={{
-                flex: 1,
-                alignItems: "flex-end",
+                flexDirection: "row",
               }}
             >
               <TextButton
-                label="Simpan"
+                label="Ubah SO"
                 buttonContainerStyle={{
                   height: 40,
-                  width: 70,
+                  width: 90,
                   borderRadius: SIZES.radius,
+                  marginLeft: 160,
                 }}
                 onPress={() => {
                   simpanSo();
+                }}
+              />
+              <TextButton
+                label="Batal SO"
+                buttonContainerStyle={{
+                  height: 40,
+                  width: 80,
+                  borderRadius: SIZES.radius,
+                  marginLeft: SIZES.radius,
+                }}
+                onPress={() => {
+                  batalSo(detailData);
                 }}
               />
             </View>
@@ -1181,10 +1245,10 @@ const DetailEditSoBeras = ({ navigation, route }) => {
                 {/* {console.log("total tampilan :", total)} */}
                 Sales Order Total : Rp.{NumberFormat(total.toString())}
               </Text>
-              {/* <Text style={{ color: COLORS.gray, fontSize: 14, left: 10 }}> */}
-              {/* {console.log("total tampilan :", total)} */}
-              {/* Total Berat : {NumberFormat(totalBerat.toString())} KG */}
-              {/* </Text> */}
+              <Text style={{ color: COLORS.gray, fontSize: 14, left: 10 }}>
+                {/* {console.log("total tampilan :", total)} */}
+                Total Berat : {NumberFormat(totalBerat.toString())} KG
+              </Text>
               <FlatList
                 keyExtractor={(item) => `${item.id}+${item.qty}`}
                 showsVerticalScrollIndicator={false}

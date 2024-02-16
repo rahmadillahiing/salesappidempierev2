@@ -64,7 +64,15 @@ const Notification = (props) => {
                 : "",
           });
         }
-        let a = [{ title: "Absen yang perlu di perbaiki", data }];
+        let a = [
+          {
+            title:
+              data.length > 0
+                ? "Absen yang perlu di perbaiki"
+                : "Tidak ada absen yang perlu di perbaiki",
+            data,
+          },
+        ];
         // console.log("data final", a[0].data);
         setDataAbsensi(a);
       });
