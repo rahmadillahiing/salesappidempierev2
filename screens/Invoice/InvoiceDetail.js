@@ -836,6 +836,7 @@ const InvoiceDetail = ({ navigation, route }) => {
             borderRadius: SIZES.radius,
             backgroundColor: COLORS.primary,
           }}
+          disabled={isLoading}
           label="Simpan"
           onPress={() => simpanPembayaran()}
         />

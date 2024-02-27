@@ -74,7 +74,7 @@ const CreditLimit = () => {
       {
         ModelCRUDRequest: {
           ModelCRUD: {
-            serviceType: "getCustomers",
+            serviceType: "getCustomersCl",
             DataRow: {
               field: [
                 {
@@ -98,7 +98,7 @@ const CreditLimit = () => {
       }
     );
     const count = response.data.WindowTabData.RowCount;
-    // console.log("hitung", response.data.WindowTabData.DataSet.DataRow);
+    console.log("hitung", response.data.WindowTabData.DataSet.DataRow);
     const dataLokasi = [];
     for (var i = 0; i < count; i++) {
       dataLokasi.push({
@@ -233,9 +233,10 @@ const CreditLimit = () => {
                 <InfoItem label="No Telp" value={bpid?.phone} />
                 <InfoItem label="Alamat" value={bpid?.addr} />
                 <InfoItem
-                  label="Kelancaran Pembayaran"
+                  label="Avg Pelunasan"
                   value={
                     additional[0]?.avgdays.toString() +
+                    " Hari" +
                     "(" +
                     additional[0]?.statusorder +
                     ")"

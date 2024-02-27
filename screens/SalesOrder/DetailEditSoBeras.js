@@ -1084,7 +1084,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
               }}
             >
               <TextButton
-                label="Ubah SO"
+                label="Simpan SO"
                 buttonContainerStyle={{
                   height: 40,
                   width: 90,

@@ -638,7 +638,7 @@ const Home = (props) => {
     // console.log("props schedule", props);
     const url =
       constants.loginServer + `/getschedulebyniktodayv1?filter=${props}`;
-    // console.log("url", url);
+    console.log("url", url);
     fetch(url).then(async (response) => {
       const isJson = response.headers
         .get("content-type")

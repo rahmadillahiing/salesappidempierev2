@@ -25,10 +25,12 @@ const DashboardDetail = ({ navigation, route }) => {
   const [surveyStock, setSurveyStock] = React.useState("");
   const [surveyCompetitor, setSurveyCompetitor] = React.useState("");
   const [surveyQtySales, setSurveyQtySales] = React.useState("");
+  const [fotoIn, setFotoIn] = React.useState(null);
+  const [fotoOut, setFotoOut] = React.useState(null);
 
   React.useEffect(() => {
     let { detailItem } = route.params;
-    // console.log("item kiriman", detailItem);
+    console.log("item kiriman", detailItem);
     if (detailItem.dimageb == null) {
       setDisplaybefore(null);
     } else {
@@ -38,6 +40,16 @@ const DashboardDetail = ({ navigation, route }) => {
       setDisplayafter(null);
     } else {
       setDisplayafter(constants.loginServer + detailItem.dimagea);
+    }
+    if (detailItem.cico_fotoin !== null) {
+      setFotoIn(constants.loginServer + "/uploads/" + detailItem.cico_fotoin);
+      console.log(
+        "fotoin",
+        constants.loginServer + "/uploads/" + detailItem.cico_fotoin
+      );
+    }
+    if (detailItem.cico_fotoout !== null) {
+      setFotoOut(constants.loginServer + "/uploads/" + detailItem.cico_fotoin);
     }
 
     // console.log("tes path1", constants.loginServer + detailItem.dimageb);
@@ -301,6 +313,79 @@ const DashboardDetail = ({ navigation, route }) => {
             </Text>
           </View>
           <LineDivider />
+        </View>
+        {/* Card */}
+        <View
+          style={{
+            height: 220,
+            borderRadius: 15,
+            backgroundColor: COLORS.lightGray2,
+            marginTop: 20,
+          }}
+        >
+          {/* CI & CO */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: SIZES.base,
+              paddingHorizontal: SIZES.radius,
+            }}
+          >
+            {/* header  */}
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={icons.focus}
+                style={{
+                  height: 20,
+                  width: 20,
+                }}
+              />
+              <Text
+                style={{
+                  color: COLORS.darkGray2,
+                  ...FONTS.body4,
+                  marginLeft: 5,
+                }}
+              >
+                Foto CI & CO(kalau dibawah 5 menit kunjungan)
+              </Text>
+            </View>
+          </View>
+          {/*  Image */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+            }}
+          >
+            <Image
+              key={fotoIn + Math.floor(Math.random() * 100) + 1}
+              source={
+                detailItem.cico_fotoin == null
+                  ? images.standar
+                  : { uri: fotoIn }
+              }
+              style={{
+                resizeMode: "contain",
+                height: 170,
+                width: "100%",
+              }}
+            />
+            <Image
+              key={fotoOut + Math.floor(Math.random() * 100) + 2}
+              source={
+                detailItem.cico_fotoout == null
+                  ? images.standar
+                  : { uri: fotoOut }
+              }
+              style={{
+                resizeMode: "contain",
+                height: 170,
+                width: "100%",
+              }}
+            />
+          </View>
         </View>
         {/* Card */}
         <View

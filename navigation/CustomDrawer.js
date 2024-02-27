@@ -80,7 +80,15 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
       const data = res;
       console.log("profile di button", data);
       setProfile(data);
-      cekArPersalesman(res.salesrep);
+      if (data.jobid == 1000006) {
+        cekArPersalesman(res.salesrep);
+      } else {
+        var dataAr = {
+          invoicecount: 0,
+          invoicevalue: 0,
+        };
+        setArSalesman(dataAr);
+      }
     });
   };
 
@@ -295,7 +303,8 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                 backgroundColor: COLORS.lightGray1,
               }}
             /> */}
-            {profile.jobid == "1000006" ? (
+            {/* 1000008,1000007 */}
+            {(profile.jobid !== "1000008") | (profile.jobid !== 1000007) ? (
               <View>
                 <CustomDrawerItem
                   label="Input SO Beras"

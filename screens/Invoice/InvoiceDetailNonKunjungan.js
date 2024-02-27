@@ -309,12 +309,12 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
                         ]);
                         return;
                       } else {
-                        setIsLoading(false);
                         // console.log("data tersimpan :", hasil1);
                         Alert.alert("Sukses", "Data telah tersimpan", [
                           { text: "Okay" },
                         ]);
                         clearData();
+                        setIsLoading(false);
                         navigation.goBack();
                       }
                     });
@@ -726,6 +726,7 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
             backgroundColor: COLORS.primary,
           }}
           label="Simpan"
+          disabled={isLoading}
           onPress={() => simpanPembayaran()}
         />
       </View>
