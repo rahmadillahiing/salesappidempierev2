@@ -421,7 +421,7 @@ const InvoiceDetail = ({ navigation, route }) => {
                   .get("content-type")
                   ?.includes("application/json");
                 const hasil1 = isJson && (await response.json());
-                console.log("invoice tanpa foto", hasil1);
+                // console.log("invoice tanpa foto", hasil1);
                 if (!response.ok) {
                   setIsLoading(false);
                   Alert.alert("Data Invalid", "Hubungi IT", [{ text: "Okay" }]);
