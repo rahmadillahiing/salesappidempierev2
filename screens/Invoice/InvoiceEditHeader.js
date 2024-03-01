@@ -77,7 +77,7 @@ const InvoiceEditHeader = () => {
       )
       .then((response) => {
         const hitunginvoice = response.data.length;
-        console.log("response", response.data);
+        // console.log("response", response.data);
         let datainvoice = [];
         let cash = 0;
         let banktransfer = 0;

@@ -31,7 +31,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 const InvoiceDetail = ({ navigation, route }) => {
   const [isChecked, setChecked] = useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [image, setImage] = useState(null);
   const [detailItem, setdetailItem] = React.useState([]);
   const [pembayaran, setPembayaran] = React.useState([]);
@@ -95,6 +95,13 @@ const InvoiceDetail = ({ navigation, route }) => {
         // console.log("respon nomor", response.data);
         let countnumber = response.data.length;
         // console.log("hitung", countnumber);
+        if (countnumber == 0) {
+          Alert.alert(
+            "Warning",
+            "Nomor bpp telah habis, mohon hubungi admin area anda"
+          );
+          navigation.goBack();
+        }
         let databpp = [];
         for (var i = 0; i < countnumber; i++) {
           databpp.push({
@@ -106,6 +113,7 @@ const InvoiceDetail = ({ navigation, route }) => {
           });
           // console.log("data bpp", databpp);
           setBpp(databpp);
+          setIsLoading(false);
         }
       });
   }
@@ -295,6 +303,7 @@ const InvoiceDetail = ({ navigation, route }) => {
             // console.log(lokasi);
             setIsLoading(true);
             if (pembayaran.id > 1) {
+              setIsLoading(true);
               var data = new FormData();
               data.append("image", {
                 uri: image,
@@ -327,7 +336,7 @@ const InvoiceDetail = ({ navigation, route }) => {
                   const hasil1 = isJson && (await response.json());
                   // console.log("respon foto", hasil1);
                   const pathSave = hasil1[0].path;
-
+                  console.log("path simpan invoice", pathSave);
                   if (pathSave !== "undefined") {
                     const requestOptions = {
                       method: "POST",
@@ -364,28 +373,34 @@ const InvoiceDetail = ({ navigation, route }) => {
                         // setIsLoading(false);
                         // console.log("data tersimpan :", hasil1);
                         Alert.alert("Sukses", "Data telah tersimpan", [
-                          { text: "Okay" },
+                          {
+                            text: "Okay",
+                            onPress: () => {
+                              clearData();
+                              navigation.goBack();
+                            },
+                          },
                           ,
                           {
                             text: "Ada retur?",
                             onPress: () => {
+                              clearData();
                               navigation.navigate("Retur");
                             },
                           },
                         ]);
-                        clearData();
-                        navigation.goBack();
                       }
                     });
-                    setIsLoading(false);
+                    // setIsLoading(false);
                   }
                 });
               } catch {
-                setIsLoading(false);
+                // setIsLoading(false);
                 (err) => console.log(err);
                 return;
               }
             } else {
+              setIsLoading(true);
               const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -406,28 +421,36 @@ const InvoiceDetail = ({ navigation, route }) => {
                   .get("content-type")
                   ?.includes("application/json");
                 const hasil1 = isJson && (await response.json());
+                console.log("invoice tanpa foto", hasil1);
                 if (!response.ok) {
                   setIsLoading(false);
                   Alert.alert("Data Invalid", "Hubungi IT", [{ text: "Okay" }]);
                   return;
                 } else {
-                  setIsLoading(false);
+                  // setIsLoading(false);
                   // console.log("data tersimpan :", hasil1);
                   Alert.alert("Sukses", "Data telah tersimpan", [
-                    { text: "Okay" },
+                    {
+                      text: "Okay",
+                      onPress: () => {
+                        setIsLoading(false);
+                        clearData();
+                        navigation.goBack();
+                      },
+                    },
                     ,
                     {
                       text: "Ada retur?",
                       onPress: () => {
+                        setIsLoading(false);
+                        clearData();
                         navigation.navigate("retur");
                       },
                     },
                   ]);
-                  clearData();
-                  navigation.goBack();
                 }
               });
-              setIsLoading(false);
+              // setIsLoading(false);
             }
           },
         },
@@ -834,10 +857,10 @@ const InvoiceDetail = ({ navigation, route }) => {
             marginHorizontal: SIZES.padding,
             marginBottom: SIZES.padding,
             borderRadius: SIZES.radius,
-            backgroundColor: COLORS.primary,
+            backgroundColor: isLoading ? COLORS.darkBlue : COLORS.primary,
           }}
           disabled={isLoading}
-          label="Simpan"
+          label={isLoading ? "Mohon Tunggu" : "Simpan"}
           onPress={() => simpanPembayaran()}
         />
       </View>

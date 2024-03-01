@@ -304,7 +304,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
               }}
             /> */}
             {/* 1000008,1000007 */}
-            {(profile.jobid !== "1000008") | (profile.jobid !== 1000007) ? (
+            {(profile.jobid !== "1000008") | (profile.jobid !== "1000007") ? (
               <View>
                 <CustomDrawerItem
                   label="Input SO Beras"

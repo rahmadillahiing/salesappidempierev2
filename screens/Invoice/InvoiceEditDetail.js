@@ -35,7 +35,7 @@ const InvoiceEditDetail = ({ navigation, route }) => {
   }, []);
 
   function cekdetail(billingid) {
-    // console.log("billing id", billingid);
+    console.log("billing id", billingid);
     axios
       .get(
         constants.CashColServer +
