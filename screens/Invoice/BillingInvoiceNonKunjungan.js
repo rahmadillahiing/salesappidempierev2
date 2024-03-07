@@ -56,7 +56,7 @@ const BillingInvoiceNonKunjungan = () => {
         console.log("error");
         return;
       }
-      // console.log("Data invoice", foundschedule);
+      console.log("Data invoice", foundschedule);
       setInvoice(foundschedule);
       setRefreshing(false);
     });

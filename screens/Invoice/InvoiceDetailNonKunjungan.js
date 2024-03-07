@@ -53,7 +53,7 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
 
   React.useEffect(() => {
     let { detailItem } = route.params;
-    // console.log("masuk detail invoice", route.params);
+    console.log("masuk detail invoice", route.params);
     setdetailItem(detailItem);
     nomorBpp(detailItem.nik);
   }, []);

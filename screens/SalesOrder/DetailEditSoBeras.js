@@ -892,6 +892,30 @@ const DetailEditSoBeras = ({ navigation, route }) => {
     // hitungulangtodos();
   };
 
+  const hitungulang = (val) => {
+    // console.log("hitung todos", todos.length);
+    const hitung = todos.length;
+    let totalhitung = 0;
+    let totalhitungberat = 0;
+
+    if (hitung > 0) {
+      todos.forEach((obj) => {
+        // console.log("obj", obj);
+        if (val === true) {
+          obj.oa = ongkosAngkut;
+
+          saveTodoToUserDevice(todos);
+          return;
+        } else {
+          obj.oa = 0;
+
+          saveTodoToUserDevice(todos);
+          return;
+        }
+      });
+    }
+  };
+
   const onChangeTextQty = (stock) => {
     if (stock === "" || stock === "-") {
       stock = "0";
@@ -1058,8 +1082,8 @@ const DetailEditSoBeras = ({ navigation, route }) => {
           </Text>
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
+              // flexDirection: "row",
+              alignItems: "flex-start",
               marginTop: 5,
             }}
           >
@@ -1071,13 +1095,15 @@ const DetailEditSoBeras = ({ navigation, route }) => {
                   value={oaYesNo}
                   onChange={(value) => {
                     setOaYesNo(value);
-                    //   hitungulang(value);
+                    hitungulang(value);
+                    // console.log("ongkos angkut", ongkosAngkut);
                   }}
                 />
               ) : (
                 <></>
               )}
             </View>
+
             <View
               style={{
                 flexDirection: "row",
@@ -1126,6 +1152,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
               clearOnFocus={true}
               closeOnBlur={false}
               onSelectItem={(item) => {
+                console.log("pilih", item);
                 item && setSelectedItem(item.id);
                 item && setSelectedItemCat(item.category);
                 item && setTextInput(item.title);
