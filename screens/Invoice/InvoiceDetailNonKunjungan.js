@@ -293,10 +293,11 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
                             : "0",
                         path: pathSave,
                         bpp: pilihNomorBpp,
+                        assignuuid: detailItem.assignuuid,
                       }),
                     };
                     const url =
-                      constants.loginServer + "/insertinvoicepayment ";
+                      constants.loginServer + "/insertinvoicepaymentv2 ";
                     fetch(url, requestOptions).then(async (response) => {
                       const isJson = response.headers
                         .get("content-type")
@@ -339,9 +340,10 @@ const InvoiceDetailNonKunjungan = ({ navigation, route }) => {
                   cashextra: "0",
                   path: "",
                   bpp: bpp,
+                  assignuuid: detailItem.assignuuid,
                 }),
               };
-              const url = constants.loginServer + "/insertinvoicepayment ";
+              const url = constants.loginServer + "/insertinvoicepaymentv2 ";
               fetch(url, requestOptions).then(async (response) => {
                 const isJson = response.headers
                   .get("content-type")

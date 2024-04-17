@@ -797,7 +797,7 @@ const Retur = ({ navigation }) => {
               },
               data: data,
             };
-
+            console.log("config", config);
             axios(config)
               .then(function (response) {
                 console.log(JSON.stringify(response.data));
@@ -821,7 +821,7 @@ const Retur = ({ navigation }) => {
                   // }
                   // console.log("data", data.length);
 
-                  // console.log("arr", data["Error"]);
+                  console.log("arr", data);
                   Alert.alert("Error Retur", "Terdapat Error,Hubungi IT ", [
                     { text: "OK" },
                   ]);

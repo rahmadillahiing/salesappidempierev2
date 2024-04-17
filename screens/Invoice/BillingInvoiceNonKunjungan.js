@@ -56,7 +56,7 @@ const BillingInvoiceNonKunjungan = () => {
         console.log("error");
         return;
       }
-      console.log("Data invoice", foundschedule);
+      // console.log("Data invoice", foundschedule);
       setInvoice(foundschedule);
       setRefreshing(false);
     });
@@ -142,6 +142,7 @@ const BillingInvoiceNonKunjungan = () => {
               lokasi: invoice.CustomerName,
               nik: profile.id,
               invtotalall: invoice.inv_totalfull,
+              assignuuid: invoice.TaskAssign_UUID,
             },
           })
         }

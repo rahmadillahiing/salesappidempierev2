@@ -35,7 +35,7 @@ const InvoiceEditDetail = ({ navigation, route }) => {
   }, []);
 
   function cekdetail(billingid) {
-    console.log("billing id", billingid);
+    // console.log("billing id", billingid);
     axios
       .get(
         constants.CashColServer +
@@ -67,6 +67,7 @@ const InvoiceEditDetail = ({ navigation, route }) => {
             bppid: response.data[i].pinv_bpp,
             bppprefix: response.data[i].TAlokasiBPBDetail_Prefix,
             path: response.data[i].pinv_path,
+            uuid: response.data[i].TaskAssign_UUID,
           });
         }
         // console.log("data parsing", datainvdetail);

@@ -125,6 +125,7 @@ const BillingInvoice = () => {
               lokasi: lokasi.customer,
               nik: lokasi.nik,
               invtotalall: invoice.totalinvtotalall,
+              assignuuid: invoice.assignuuid,
             },
           })
         }

@@ -63,6 +63,7 @@ const ConfirmTtf = ({ navigation }) => {
             grandtotal: response.data[0].inv_total,
             bpname: response.data[0].CustomerName,
             noinv: response.data[0].inv_number,
+            uuid: response.data[0].TaskAssign_UUID,
           });
         } else {
           for (var i = 0; i < hitunginvoice; i++) {
@@ -72,6 +73,7 @@ const ConfirmTtf = ({ navigation }) => {
               grandtotal: response.data[i].inv_total,
               bpname: response.data[i].CustomerName,
               noinv: response.data[i].inv_number,
+              uuid: response.data[i].TaskAssign_UUID,
             });
           }
         }
@@ -86,8 +88,8 @@ const ConfirmTtf = ({ navigation }) => {
     }
   };
 
-  const confirmRow = (rowMap, rowKey, invNo, invStatus) => {
-    // console.log("rowmap", rowMap);
+  const confirmRow = (rowMap, rowKey, invNo, invStatus, uuid) => {
+    console.log("uuid", uuid);
     // console.log("rowkey", rowKey);
     closeRow(rowMap, rowKey);
     if (invStatus === "N") {
@@ -108,10 +110,11 @@ const ConfirmTtf = ({ navigation }) => {
                   payment: 0,
                   nik: profile.id,
                   confirmttf: "Y",
+                  uuid: uuid,
                 }),
               };
               // console.log("request option", requestOptions);
-              const url = constants.loginServer + "/insertinvoicettf";
+              const url = constants.loginServer + "/insertinvoicettfv2";
               // console.log("url ", url);
               fetch(url, requestOptions).then(async (response) => {
                 const isJson = response.headers
@@ -295,13 +298,19 @@ const ConfirmTtf = ({ navigation }) => {
 
   const renderItem = (data, rowMap) => {
     const rowHeightAnimatedValue = new Animated.Value(90);
-
+    console.log("data ttf", data.item.uuid);
     return (
       <VisibleItem
         data={data}
         rowHeightAnimatedValue={rowHeightAnimatedValue}
         removeRow={() =>
-          confirmRow(rowMap, data.item.id, data.item.noinv, data.item.status)
+          confirmRow(
+            rowMap,
+            data.item.id,
+            data.item.noinv,
+            data.item.status,
+            data.item.uuid
+          )
         }
       />
     );
@@ -334,7 +343,13 @@ const ConfirmTtf = ({ navigation }) => {
         rowHeightAnimatedValue={rowHeightAnimatedValue}
         // onClose={() => closeRow(rowMap, data.item.id)}
         onDelete={() =>
-          confirmRow(rowMap, data.item.id, data.item.noinv, data.item.status)
+          confirmRow(
+            rowMap,
+            data.item.id,
+            data.item.noinv,
+            data.item.status,
+            data.item.uuid
+          )
         }
       />
     );

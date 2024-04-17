@@ -92,6 +92,7 @@ import ConfirmTtf from "./Invoice/ConfirmTtf";
 import InvoiceEditHeader from "./Invoice/InvoiceEditHeader";
 import InvoiceEditDetail from "./Invoice/InvoiceEditDetail";
 import InvoiceEditSubDetail from "./Invoice/InvoiceEditSubDetail";
+import InvoiceOutstanding from "./Invoice/InvoiceOutstanding";
 
 //Report
 import MonitoringSo from "./Report/MonitoringSo";
@@ -109,6 +110,7 @@ export {
   MonitoringSo,
   MonitoringSoDetail,
   BillingInvoice,
+  InvoiceOutstanding,
   InvoiceDetail,
   ConfirmInvoice,
   BillingInvoiceNonKunjungan,

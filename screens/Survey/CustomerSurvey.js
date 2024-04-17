@@ -1404,6 +1404,7 @@ const CustomerSurvey = ({ navigation }) => {
                       ?.includes("application/json");
                     const hasil2 = isJson2 && (await response2.json());
                     const pathSave2 = hasil2[0].path;
+                    console.log("simpan foto ke 2", pathSave2);
                     if (pathSave2 !== "undefined") {
                       const response3 = fetch(
                         constants.loginServer + "/uploads1",
@@ -1414,6 +1415,7 @@ const CustomerSurvey = ({ navigation }) => {
                           ?.includes("application/json");
                         const hasil3 = isJson3 && (await response3.json());
                         const pathSave3 = hasil3[0].path;
+                        console.log("simpan foto ke 3", pathSave3);
                         if (pathSave3 !== "undefined") {
                           const response4 = fetch(
                             constants.loginServer + "/uploads1",
@@ -1424,6 +1426,7 @@ const CustomerSurvey = ({ navigation }) => {
                               ?.includes("application/json");
                             const hasil4 = isJson4 && (await response4.json());
                             const pathSave4 = hasil4[0].path;
+                            console.log("simpan foto ke 4", pathSave4);
                             if (pathSave4 !== "undefined") {
                               let namafoto1 =
                                 companyName +
@@ -1563,12 +1566,64 @@ const CustomerSurvey = ({ navigation }) => {
                                   }
                                 }
                               );
+                            } else {
+                              Alert.alert(
+                                "Error",
+                                "Foto ke empat gagal di proses, mohon ulangi kembali",
+                                [
+                                  {
+                                    text: "OK",
+                                    onPress: () => {
+                                      setIsLoading(false);
+                                    },
+                                  },
+                                ]
+                              );
                             }
                           });
+                        } else {
+                          Alert.alert(
+                            "Error",
+                            "Foto ketiga gagal di proses, mohon ulangi kembali",
+                            [
+                              {
+                                text: "OK",
+                                onPress: () => {
+                                  setIsLoading(false);
+                                },
+                              },
+                            ]
+                          );
                         }
                       });
+                    } else {
+                      Alert.alert(
+                        "Error",
+                        "Foto kedua gagal di proses, mohon ulangi kembali",
+                        [
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              setIsLoading(false);
+                            },
+                          },
+                        ]
+                      );
                     }
                   });
+                } else {
+                  Alert.alert(
+                    "Error",
+                    "Foto Pertama gagal di proses, mohon ulangi kembali",
+                    [
+                      {
+                        text: "OK",
+                        onPress: () => {
+                          setIsLoading(false);
+                        },
+                      },
+                    ]
+                  );
                 }
               });
             } catch {

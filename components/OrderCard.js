@@ -11,7 +11,7 @@ import axios from "axios";
 const OrderCard = ({ orderItem, profile }) => {
   const navigation = useNavigation();
 
-  console.log("order", orderItem);
+  // console.log("order", profile);
 
   // console.log("profile", profile);
 
@@ -179,6 +179,7 @@ const OrderCard = ({ orderItem, profile }) => {
                   navigation.navigate("DetailEditSoBeras", {
                     detailItem: {
                       orderItem,
+                      profile,
                     },
                   })
                 }

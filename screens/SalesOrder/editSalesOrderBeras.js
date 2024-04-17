@@ -49,10 +49,10 @@ const EditOrderSalesBeras = () => {
   //   }, []);
 
   const getSalesHeader = async (id) => {
-    console.log(
-      "a",
-      constants.CashColServer + `/api/v1/salesorder/salesheader/${id}/draft`
-    );
+    // console.log(
+    //   "a",
+    //   constants.CashColServer + `/api/v1/salesorder/salesheader/${id}/draft`
+    // );
     await axios
       .get(
         constants.CashColServer + `/api/v1/salesorder/salesheader/${id}/draft`

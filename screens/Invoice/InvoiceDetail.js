@@ -51,7 +51,7 @@ const InvoiceDetail = ({ navigation, route }) => {
 
   React.useEffect(() => {
     let { detailItem } = route.params;
-    // console.log("masuk detail invoice", route.params.detailItem.nik);
+    // console.log("masuk detail invoice", detailItem);
     setdetailItem(detailItem);
     nomorBpp(route.params.detailItem.nik);
   }, []);
@@ -353,11 +353,12 @@ const InvoiceDetail = ({ navigation, route }) => {
                             : "0",
                         path: pathSave,
                         bpp: pilihNomorBpp,
+                        assignuuid: detailItem.assignuuid,
                       }),
                     };
                     // console.log("tes", requestOptions);
                     const url =
-                      constants.loginServer + "/insertinvoicepayment ";
+                      constants.loginServer + "/insertinvoicepaymentv2 ";
                     fetch(url, requestOptions).then(async (response) => {
                       const isJson = response.headers
                         .get("content-type")
@@ -413,9 +414,10 @@ const InvoiceDetail = ({ navigation, route }) => {
                   cashextra: "0",
                   path: "",
                   bpp: pilihNomorBpp,
+                  assignuuid: detailItem.assignuuid,
                 }),
               };
-              const url = constants.loginServer + "/insertinvoicepayment ";
+              const url = constants.loginServer + "/insertinvoicepaymentv2 ";
               fetch(url, requestOptions).then(async (response) => {
                 const isJson = response.headers
                   .get("content-type")

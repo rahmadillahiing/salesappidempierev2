@@ -59,6 +59,7 @@ import {
   DashboardDetail,
   EditOrderSalesBeras,
   DetailEditSoBeras,
+  InvoiceOutstanding,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -230,6 +231,10 @@ const App = () => {
           <Stack.Screen
             name="NotificationSetting"
             component={NotificationSetting}
+          />
+          <Stack.Screen
+            name="InvoiceOutstanding"
+            component={InvoiceOutstanding}
           />
         </Stack.Navigator>
       </NavigationContainer>

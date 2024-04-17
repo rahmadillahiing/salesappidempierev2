@@ -100,17 +100,18 @@ const Home = (props) => {
       if (a == null) {
         setLokasi(null);
         setAdditional(null);
-      } else {
-        if (lokasi !== null) {
-          if (lokasi.locationIdemp !== null) {
-            cekArCustomer(lokasi.locationIdemp);
-            cekCreditLimit(lokasi.locationIdemp);
-            // cekCreditLimitRmp(lokasi.locationIdemp);
-          }
-        }
       }
+      // else {
+      //   if (lokasi !== null) {
+      //     if (lokasi.locationIdemp !== null) {
+      //       // cekArCustomer(lokasi.locationIdemp);
+      //       // cekCreditLimit(lokasi.locationIdemp);
+      //       // cekCreditLimitRmp(lokasi.locationIdemp);
+      //     }
+      //   }
+      // }
       navigation.addListener("focus", () => {
-        console.log("masuk sini refresh auto");
+        // console.log("masuk sini refresh auto");
         // onRefresh();
         getUser();
       });
@@ -466,7 +467,7 @@ const Home = (props) => {
         if (checkdate != res.tanggal) {
           cleartgl();
         } else {
-          cekArCustomer(res.locationIdemp);
+          // cekArCustomer(res.locationIdemp);
           setLokasi(res);
         }
         // } else {
@@ -525,7 +526,34 @@ const Home = (props) => {
       .catch((error) => console.log(error));
   };
 
+  function find_in_object(my_array, my_criteria) {
+    // console.log("my array", my_array);
+    // console.log("query", my_criteria);
+    const filterdata = my_array.filter(
+      (item) =>
+        item.categories == my_criteria.categories &&
+        item.name == my_criteria.name &&
+        item.tglout == null
+    );
+    // console.log("filter", filterdata);
+    return filterdata;
+  }
+
   const checkout = () => {
+    if (profile.jobid == "1000006") {
+      let query = {
+        categories: 1,
+        name: lokasi.customer,
+      };
+
+      let cekfoto = find_in_object(popular, query);
+      console.log("tes", cekfoto);
+
+      if (cekfoto[0].dimagea == null || cekfoto[0].dimageb == null) {
+        Alert.alert("Warning", "Lengkapi Foto Display before dan after");
+        return;
+      }
+    }
     let a = moment(moment(tgl + " " + dt).format("YYYY-MM-DDTHH:mm:ss")); //now
     let b = moment(
       moment(tgl + " " + lokasi.waktuin).format("YYYY-MM-DDTHH:mm:ss")
@@ -604,7 +632,7 @@ const Home = (props) => {
   // Handler
 
   const cekAbsen = async (nik) => {
-    console.log("nik", nik);
+    // console.log("nik", nik);
     const response = await axios.get(
       constants.inhouseServer + `getbakneedrevision?userid=${nik}`
     );
@@ -638,7 +666,7 @@ const Home = (props) => {
     // console.log("props schedule", props);
     const url =
       constants.loginServer + `/getschedulebyniktodayv1?filter=${props}`;
-    console.log("url", url);
+    // console.log("url", url);
     fetch(url).then(async (response) => {
       const isJson = response.headers
         .get("content-type")
@@ -876,7 +904,7 @@ const Home = (props) => {
       <View
         style={{
           flex: 1,
-          marginBottom: SIZES.radius,
+          marginBottom: SIZES.largeTitle,
           padding: SIZES.radius,
           borderBottomLeftRadius: SIZES.radius,
           borderBottomRightRadius: SIZES.radius,
@@ -906,7 +934,7 @@ const Home = (props) => {
               ) : arCustomer.length > 0 ? (
                 renderCl()
               ) : (
-                <Text>Tidak ada overdue</Text>
+                <></>
               )}
               <Text style={{ color: COLORS.darkGray2, ...FONTS.body4 }}>
                 Check in : {lokasi.waktuin}
@@ -951,32 +979,39 @@ const Home = (props) => {
               <View
                 style={{
                   backgroundColor: COLORS.red,
-                  marginTop: -5,
+                  marginTop: -20,
                   marginBottom: 10,
                   borderRadius: 20,
                 }}
               >
-                <Text
-                  style={{
-                    color: COLORS.white2,
-                    ...FONTS.body4,
-                    marginLeft: SIZES.radius,
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log("Lokasi", profile);
+                    navigation.navigate("InvoiceOutstanding", { profile });
                   }}
                 >
-                  Total Invoice Due Date : {arSalesman.invoicecount} Invoice
-                </Text>
-                <Text
-                  style={{
-                    color: COLORS.white2,
-                    ...FONTS.body4,
-                    marginLeft: SIZES.radius,
-                  }}
-                >
-                  Nilai Invoice Due Date :Rp.{" "}
-                  {arSalesman.invoicevalue > 0
-                    ? NumberFormat(arSalesman.invoicevalue).toString()
-                    : 0}
-                </Text>
+                  <Text
+                    style={{
+                      color: COLORS.white2,
+                      ...FONTS.body4,
+                      marginLeft: SIZES.radius,
+                    }}
+                  >
+                    Total Invoice Due Date : {arSalesman.invoicecount} Invoice
+                  </Text>
+                  <Text
+                    style={{
+                      color: COLORS.white2,
+                      ...FONTS.body4,
+                      marginLeft: SIZES.radius,
+                    }}
+                  >
+                    Nilai Invoice Due Date :Rp.{" "}
+                    {arSalesman.invoicevalue > 0
+                      ? NumberFormat(arSalesman.invoicevalue).toString()
+                      : 0}
+                  </Text>
+                </TouchableOpacity>
               </View>
             ) : (
               <></>

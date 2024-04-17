@@ -96,6 +96,7 @@ const InvoiceEditHeader = () => {
                 response.data[i].pinv_payment == null
                   ? 0
                   : response.data[i].pinv_payment,
+              uuid: response.data[i].TaskAssign_UUID,
             });
           } else {
             datainvoice.forEach((obj) => {
@@ -113,10 +114,10 @@ const InvoiceEditHeader = () => {
             cekgiro = cekgiro + response.data[i].pinv_payment;
           }
         }
-        console.log("data invoice", datainvoice);
-        console.log("data cash", cash);
-        console.log("data bank transfer", banktransfer);
-        console.log("data giro", cekgiro);
+        // console.log("data invoice", datainvoice);
+        // console.log("data cash", cash);
+        // console.log("data bank transfer", banktransfer);
+        // console.log("data giro", cekgiro);
 
         setDataInvoice(datainvoice);
         setCash(cash);
@@ -202,6 +203,7 @@ const InvoiceEditHeader = () => {
     );
   }
   function simpandata() {
+    console.log("tes", pilihList);
     if (pilihList.status === "Terupdate") {
       Alert.alert(
         "Data Sudah Terupdate",
@@ -253,10 +255,11 @@ const InvoiceEditHeader = () => {
                   cashextra: "0",
                   path: "",
                   bpp: null,
+                  assignuuid: pilihList.uuid,
                 }),
               };
               // console.log("request", requestOptions);
-              const url = constants.loginServer + "/insertinvoicepayment";
+              const url = constants.loginServer + "/insertinvoicepaymentv2";
               // console.log("url", url);
 
               fetch(url, requestOptions).then(async (response) => {

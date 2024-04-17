@@ -49,7 +49,7 @@ const DashboardDetail = ({ navigation, route }) => {
       );
     }
     if (detailItem.cico_fotoout !== null) {
-      setFotoOut(constants.loginServer + "/uploads/" + detailItem.cico_fotoin);
+      setFotoOut(constants.loginServer + "/uploads/" + detailItem.cico_fotoout);
     }
 
     // console.log("tes path1", constants.loginServer + detailItem.dimageb);

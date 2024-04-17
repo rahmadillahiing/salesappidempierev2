@@ -304,7 +304,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
               }}
             /> */}
             {/* 1000008,1000007 */}
-            {(profile.jobid !== "1000008") | (profile.jobid !== "1000007") ? (
+            {profile.jobid == "1000006" ? (
               <View>
                 <CustomDrawerItem
                   label="Input SO Beras"
@@ -411,7 +411,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                 />
 
                 <CustomDrawerItem
-                  label="Kenaikan CL"
+                  label="Perubahan CL"
                   icon={icons.bar}
                   onPress={() => {
                     navigation.closeDrawer();

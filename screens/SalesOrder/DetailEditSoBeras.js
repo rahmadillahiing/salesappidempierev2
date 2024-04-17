@@ -22,9 +22,15 @@ import Icon from "@expo/vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 Feather.loadFont();
 
-import { CustomSwitch, Header, IconButton, TextButton } from "../../components";
+import {
+  CustomSwitch,
+  FormInput,
+  Header,
+  IconButton,
+  TextButton,
+} from "../../components";
 
-import { NumberFormat } from "../../utils";
+import { GetDataLocal, NumberFormat } from "../../utils";
 import { COLORS, SIZES, icons, constants, images } from "../../constants";
 import moment from "moment";
 
@@ -58,12 +64,16 @@ const DetailEditSoBeras = ({ navigation, route }) => {
   const [total, setTotal] = useState(0);
   const [oatotal, setOaTotal] = useState(0);
   const [totalBerat, setTotalBerat] = useState(0);
-
+  const [profile, setProfile] = useState([]);
+  const [reference, setReference] = useState("");
   React.useEffect(() => {
     let { detailItem } = route.params;
-    // console.log("detail beras", detailItem.orderItem);
+    console.log("lemparan", detailItem);
 
     if (detailItem.orderItem.orderid !== "") {
+      // getUser();
+      setReference(detailItem.orderItem.reference);
+      setProfile(detailItem.profile);
       setNoso(detailItem.orderItem.orderid);
       setDetailData(detailItem.orderItem);
       getLokasi(detailItem.orderItem.partnerid);
@@ -71,6 +81,13 @@ const DetailEditSoBeras = ({ navigation, route }) => {
       //   setIsloading(false);
     }
   }, []);
+
+  const getUser = async () => {
+    await GetDataLocal("user").then((res) => {
+      const data = res;
+      setProfile(data);
+    });
+  };
 
   const getDetailProduct = async (orderid) => {
     await axios
@@ -1088,7 +1105,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
             }}
           >
             <View>
-              {ongkosAngkut !== 0 ? (
+              {ongkosAngkut !== 0 && profile.region == "1000007" ? (
                 <CustomSwitch
                   label="Ongkos Angkut"
                   additional={oaYesNo ? ongkosAngkut.toString() : "0"}
@@ -1135,6 +1152,22 @@ const DetailEditSoBeras = ({ navigation, route }) => {
               />
             </View>
           </View>
+          <FormInput
+            editable={false}
+            label="Reference"
+            value={reference}
+            autoCapitalize="characters"
+            maxLength={30}
+            inputContainerStyle={{
+              backgroundColor: COLORS.white2,
+              height: 25,
+              width: 340,
+            }}
+            inputStyle={{
+              fontWeight: "bold",
+            }}
+          />
+
           <Text
             style={
               (styles.sectionTitle, { color: COLORS.gray, fontWeight: "bold" })
@@ -1152,7 +1185,7 @@ const DetailEditSoBeras = ({ navigation, route }) => {
               clearOnFocus={true}
               closeOnBlur={false}
               onSelectItem={(item) => {
-                console.log("pilih", item);
+                // console.log("pilih", item);
                 item && setSelectedItem(item.id);
                 item && setSelectedItemCat(item.category);
                 item && setTextInput(item.title);

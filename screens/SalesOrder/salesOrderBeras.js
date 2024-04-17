@@ -27,13 +27,20 @@ import Icon from "@expo/vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 Feather.loadFont();
 
-import { CustomSwitch, Header, IconButton, TextButton } from "../../components";
+import {
+  CustomSwitch,
+  FormInput,
+  Header,
+  IconButton,
+  TextButton,
+} from "../../components";
 
 import { NumberFormat } from "../../utils";
 import { COLORS, SIZES, icons, constants, images } from "../../constants";
 import moment from "moment";
 
 const SalesOrderBeras = ({ navigation }) => {
+  const [reference, setReference] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const [listProductAvailable, setListProductAvailable] = useState([]);
   const [lokasi, setLokasi] = useState(null);
@@ -773,7 +780,7 @@ const SalesOrderBeras = ({ navigation }) => {
       }
     });
     if (lokasitemp !== "") {
-      cekArCustomer(lokasitemp.locationIdemp);
+      // cekArCustomer(lokasitemp.locationIdemp);
       await GetDataLocal("sales").then(async (res2) => {
         // console.log("cek cache sales", res2);
         if (res2 !== null) {
@@ -1095,6 +1102,7 @@ const SalesOrderBeras = ({ navigation }) => {
               C_BPartner_Name: lokasi.customer,
               user: lokasi.nama,
               pwd: lokasi.pass,
+              reference: reference,
             });
             // console.log("header so", dataSoHeader);
             // console.log("detail so", dataSoDetail);
@@ -1106,7 +1114,7 @@ const SalesOrderBeras = ({ navigation }) => {
             // console.log("http://localhost:3001/api/v1/salesorder-submit");
             axios
               .post(
-                constants.CashColServer + "/api/v1/salesorder/submit",
+                constants.CashColServer + "/api/v1/salesorder/submit2",
                 options
               )
               .then((response) => {
@@ -1753,7 +1761,7 @@ const SalesOrderBeras = ({ navigation }) => {
               marginTop: 5,
             }}
           >
-            {ongkosAngkut === 0 ? (
+            {ongkosAngkut === 0 || lokasi.region !== "1000007" ? (
               <></>
             ) : (
               <View>
@@ -1771,15 +1779,32 @@ const SalesOrderBeras = ({ navigation }) => {
             <View
               style={{
                 flex: 1,
-                alignItems: "flex-end",
+                flexDirection: "row",
               }}
             >
+              <FormInput
+                label="Reference"
+                value={reference}
+                autoCapitalize="characters"
+                maxLength={30}
+                onChange={(value) => {
+                  setReference(value);
+                }}
+                inputContainerStyle={{
+                  backgroundColor: COLORS.white,
+                  height: 30,
+                  width: 250,
+                }}
+              />
+
               <TextButton
                 label="Simpan"
                 buttonContainerStyle={{
+                  top: 13,
                   height: 40,
                   width: 70,
                   borderRadius: SIZES.radius,
+                  left: 15,
                 }}
                 onPress={() => {
                   simpanSo();
@@ -1787,7 +1812,20 @@ const SalesOrderBeras = ({ navigation }) => {
               />
             </View>
           </View>
-
+          {/* <View>
+            <FormInput
+              label="Reference"
+              value={reference}
+              autoCapitalize="characters"
+              onChange={(value) => {
+                setReference(value);
+              }}
+              inputContainerStyle={{
+                backgroundColor: COLORS.white,
+                height: 30,
+              }}
+            />
+          </View> */}
           <Text
             style={
               (styles.sectionTitle, { color: COLORS.gray, fontWeight: "bold" })

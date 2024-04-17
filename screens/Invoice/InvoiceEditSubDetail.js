@@ -620,10 +620,11 @@ const InvoiceEditSubDetail = ({ navigation, route }) => {
                     ? dataroute.detailItem.bppid
                     : pilihNomorBpp,
                 oldbpp: dataroute.detailItem.bppid,
+                uuid: dataroute.detailItem.uuid,
               }),
             };
             // console.log("request edit", requestOptions);
-            const url = constants.loginServer + "/editInvoicePayment ";
+            const url = constants.loginServer + "/editInvoicePaymentv2 ";
             fetch(url, requestOptions).then(async (response) => {
               const isJson = response.headers
                 .get("content-type")
