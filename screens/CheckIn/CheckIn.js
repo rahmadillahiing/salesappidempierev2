@@ -129,7 +129,7 @@ const CheckIn = ({ navigation }) => {
   const takePicture = async () => {
     if (cameraRef) {
       const camRatios = await cameraRef.current.getSupportedRatiosAsync();
-      console.log("ratio camera", camRatios);
+      // console.log("ratio camera", camRatios);
       // console.log("in take picture");
       try {
         let photo = await cameraRef.current.takePictureAsync({
@@ -147,9 +147,9 @@ const CheckIn = ({ navigation }) => {
   };
 
   const simpanData = () => {
-    // console.log("a", labellokasi);
-    // console.log("b", lokasiLain);
-
+    // console.log("valuelokasiIdempCode", valuelokasiIdempCode);
+    // console.log("lokasiLain", lokasiLain);
+    // console.log("labellokasi", labellokasi);
     // console.log("value", valuelokasi);
     if (displayCurrentAddress === "Wait, we are fetching you location...") {
       Alert.alert(
@@ -266,8 +266,8 @@ const CheckIn = ({ navigation }) => {
       } else {
         // clearCombo();
         const dataLocation = {
-          locationid: valuelokasiCode,
-          locationIdemp: valuelokasiIdempCode,
+          locationid: isRemember ? valuelokasiCode : "0",
+          locationIdemp: isRemember ? valuelokasiIdempCode : "0",
           waktuin: dt,
           tanggal: tgl,
           lokasi: displayCurrentAddress,
@@ -483,10 +483,10 @@ const CheckIn = ({ navigation }) => {
     setLatitude(JSON.stringify(coords.latitude));
     setLongitude(JSON.stringify(coords.longitude));
 
-    console.log(
-      "location",
-      JSON.stringify(coords.latitude + "," + coords.longitude)
-    );
+    // console.log(
+    //   "location",
+    //   JSON.stringify(coords.latitude + "," + coords.longitude)
+    // );
 
     if (coords) {
       const { latitude, longitude } = coords;
@@ -495,7 +495,7 @@ const CheckIn = ({ navigation }) => {
         latitude,
         longitude,
       });
-      console.log("lokasi", lokasi);
+      // console.log("lokasi", lokasi);
       setIsGetLocation(true);
       for (let item of lokasi) {
         let address = `${item.district}, ${item.city}, ${item.region}, ${item.postalCode}`;
@@ -646,6 +646,8 @@ const CheckIn = ({ navigation }) => {
                   setValuelokasi(null);
                   setLabellokasi(null);
                   setValuelokasiIdempCode(null);
+                  setValuelokasiCode(0);
+                  setBpid(null);
                 }}
               />
               <View

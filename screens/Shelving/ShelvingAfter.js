@@ -142,52 +142,69 @@ const ShelvingAfter = ({ navigation }) => {
 
                 try {
                   const response = fetch(
-                    constants.loginServer + "/upload",
+                    constants.loginServer + "/upload2",
                     config
-                  ).then(async (response) => {
-                    const isJson = response.headers
-                      .get("content-type")
-                      ?.includes("application/json");
-                    const hasil1 = isJson && (await response.json());
-                    // console.log("respon foto", hasil1);
-                    const pathSave = hasil1[0].path;
-                    // console.log("culade", pathSave);
-                    if (pathSave !== "undefined") {
-                      const requestOptions = {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          tanggal: lokasi.tanggal,
-                          lokasiid: lokasi.locationid,
-                          path: pathSave,
-                          nik: lokasi.nik,
-                          lokasiname: lokasi.customer,
-                        }),
-                      };
-                      // console.log("kirim data foto :", requestOptions);
-                      const url = constants.loginServer + "/updatesalesdisplay";
-                      fetch(url, requestOptions).then(async (response) => {
-                        const isJson = response.headers
-                          .get("content-type")
-                          ?.includes("application/json");
-                        const hasil1 = isJson && (await response.json());
-                        if (!response.ok) {
-                          setIsLoading(false);
-                          Alert.alert("Data Invalid", "Hubungi IT", [
-                            { text: "Okay" },
-                          ]);
-                          return;
-                        } else {
-                          setIsLoading(false);
-                          // console.log("data tersimpan :", hasil1);
-                          Alert.alert("Sukses", "Data telah tersimpan", [
-                            { text: "Okay" },
-                          ]);
-                          setImage(null);
-                        }
-                      });
-                    }
-                  });
+                  )
+                    .then(async (response) => {
+                      const isJson = response.headers
+                        .get("content-type")
+                        ?.includes("application/json");
+                      const hasil1 = isJson && (await response.json());
+                      // console.log("respon foto", hasil1);
+                      const pathSave = hasil1[0].path;
+                      // console.log("culade", pathSave);
+                      if (pathSave !== "undefined") {
+                        const requestOptions = {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            tanggal: lokasi.tanggal,
+                            lokasiid: lokasi.locationid,
+                            path: pathSave,
+                            nik: lokasi.nik,
+                            lokasiname: lokasi.customer,
+                          }),
+                        };
+                        // console.log("kirim data foto :", requestOptions);
+                        const url =
+                          constants.loginServer + "/updatesalesdisplay";
+                        fetch(url, requestOptions).then(async (response) => {
+                          const isJson = response.headers
+                            .get("content-type")
+                            ?.includes("application/json");
+                          const hasil1 = isJson && (await response.json());
+                          if (!response.ok) {
+                            setIsLoading(false);
+                            Alert.alert("Data Invalid", "Hubungi IT", [
+                              { text: "Okay" },
+                            ]);
+                            return;
+                          } else {
+                            setIsLoading(false);
+                            // console.log("data tersimpan :", hasil1);
+                            Alert.alert("Sukses", "Data telah tersimpan", [
+                              { text: "Okay" },
+                            ]);
+                            setImage(null);
+                          }
+                        });
+                      } else {
+                        Alert.alert("Gagal", "Mohon simpan ulang fotonya", [
+                          { text: "Okay" },
+                        ]);
+                        setIsLoading(false);
+                        return;
+                      }
+                    })
+                    .catch((error) => {
+                      Alert.alert(
+                        "Gagal",
+                        "Mohon simpan ulang fotonya dalam 5 detik",
+                        [{ text: "Okay" }]
+                      );
+                      setIsLoading(false);
+                      return;
+                    });
                 } catch {
                   setIsLoading(false);
                   (err) => console.log(err);

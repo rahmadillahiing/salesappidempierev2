@@ -96,7 +96,7 @@ const Home = (props) => {
     // console.log("tes isfocused", lokasi);
     GetDataLocal("lokasi").then((res) => {
       let a = res;
-      console.log("check data local", res);
+      // console.log("check data local", res);
       if (a == null) {
         setLokasi(null);
         setAdditional(null);
@@ -185,7 +185,7 @@ const Home = (props) => {
     //Call the Service to get the latest data
     // console.log("ID yg di pake", profile.id);
     // console.log("masuk lewat refresh");
-    console.log("profile", profile);
+    // console.log("profile", profile);
     if (profile.id !== "") {
       scheduleToday(profile.id);
       cekArPersalesman(profile.salesrep);
@@ -540,20 +540,7 @@ const Home = (props) => {
   }
 
   const checkout = () => {
-    if (profile.jobid == "1000006") {
-      let query = {
-        categories: 1,
-        name: lokasi.customer,
-      };
-
-      let cekfoto = find_in_object(popular, query);
-      console.log("tes", cekfoto);
-
-      if (cekfoto[0].dimagea == null || cekfoto[0].dimageb == null) {
-        Alert.alert("Warning", "Lengkapi Foto Display before dan after");
-        return;
-      }
-    }
+    // console.log("lokasi", lokasi);
     let a = moment(moment(tgl + " " + dt).format("YYYY-MM-DDTHH:mm:ss")); //now
     let b = moment(
       moment(tgl + " " + lokasi.waktuin).format("YYYY-MM-DDTHH:mm:ss")
@@ -561,6 +548,23 @@ const Home = (props) => {
     let c = a.diff(b, "minutes");
 
     if (c >= 5) {
+      console.log("lokasi", lokasi);
+      console.log("cek string", isNaN(lokasi.locationid));
+      if (profile.jobid == "1000006" && lokasi.locationid !== "0") {
+        let query = {
+          categories: 1,
+          name: lokasi.customer,
+        };
+        console.log("query", query);
+        let cekfoto = find_in_object(popular, query);
+        console.log("tes", cekfoto);
+
+        if (cekfoto[0].dimagea == null || cekfoto[0].dimageb == null) {
+          Alert.alert("Warning", "Lengkapi Foto Display before dan after");
+          return;
+        }
+      }
+
       Alert.alert(
         "Checkout",
         "Anda berada di " +
@@ -578,7 +582,7 @@ const Home = (props) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   tanggal: tgl + " " + dt,
-                  lokasiid: lokasi.locationid,
+                  lokasiid: isNaN(lokasi.locationid) ? 0 : lokasi.locationid,
                   nik: lokasi.nik,
                   customer: lokasi.customer.replace("'", "`"),
                   alasan: null,
@@ -986,7 +990,7 @@ const Home = (props) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    console.log("Lokasi", profile);
+                    // console.log("Lokasi", profile);
                     navigation.navigate("InvoiceOutstanding", { profile });
                   }}
                 >

@@ -2,7 +2,7 @@ import moment from "moment";
 import React from "react";
 import { View, Text, Image, ScrollView, SafeAreaView } from "react-native";
 
-import { Header, IconButton, LineDivider, ListItem } from "../../components";
+import { Header, IconButton, LineDivider } from "../../components";
 import {
   FONTS,
   SIZES,
@@ -19,18 +19,18 @@ const DashboardDetail = ({ navigation, route }) => {
   const [qty, setQty] = React.useState(1);
   const [displayBefore, setDisplaybefore] = React.useState("");
   const [displayAfter, setDisplayafter] = React.useState("");
-  const [returData, setReturData] = React.useState("");
-  const [soData, setSoData] = React.useState("");
-  const [surveyDataHarga, setSurveyDataHarga] = React.useState("");
-  const [surveyStock, setSurveyStock] = React.useState("");
-  const [surveyCompetitor, setSurveyCompetitor] = React.useState("");
-  const [surveyQtySales, setSurveyQtySales] = React.useState("");
+  const [returData, setReturData] = React.useState([]);
+  const [soData, setSoData] = React.useState([]);
+  const [surveyDataHarga, setSurveyDataHarga] = React.useState([]);
+  const [surveyStock, setSurveyStock] = React.useState([]);
+  const [surveyCompetitor, setSurveyCompetitor] = React.useState([]);
+  const [surveyQtySales, setSurveyQtySales] = React.useState([]);
   const [fotoIn, setFotoIn] = React.useState(null);
   const [fotoOut, setFotoOut] = React.useState(null);
 
   React.useEffect(() => {
     let { detailItem } = route.params;
-    console.log("item kiriman", detailItem);
+    // console.log("item kiriman", detailItem);
     if (detailItem.dimageb == null) {
       setDisplaybefore(null);
     } else {
@@ -43,25 +43,15 @@ const DashboardDetail = ({ navigation, route }) => {
     }
     if (detailItem.cico_fotoin !== null) {
       setFotoIn(constants.loginServer + "/uploads/" + detailItem.cico_fotoin);
-      console.log(
-        "fotoin",
-        constants.loginServer + "/uploads/" + detailItem.cico_fotoin
-      );
     }
     if (detailItem.cico_fotoout !== null) {
       setFotoOut(constants.loginServer + "/uploads/" + detailItem.cico_fotoout);
     }
-
-    // console.log("tes path1", constants.loginServer + detailItem.dimageb);
-    // console.log("tes path2", constants.loginServer + detailItem.dimagea);
-    // console.log("detail item", detailItem);
     setdetailItem(detailItem);
+
     if (detailItem.returid !== null) {
       getReturn(detailItem.returid);
     }
-    // if (detailItem.soid !== null) {
-    //   getSo(detailItem.soid);
-    // }
     if (detailItem.countharga !== null) {
       getSurveyHarga(
         detailItem.id,
@@ -70,6 +60,7 @@ const DashboardDetail = ({ navigation, route }) => {
         detailItem.name
       );
     }
+    // console.log("stock", detailItem.stockid);
     if (detailItem.stockid !== null) {
       getStock(detailItem.stockid);
     }
@@ -81,16 +72,9 @@ const DashboardDetail = ({ navigation, route }) => {
         detailItem.name
       );
     }
-    // if (detailItem.countcompetitor !== null) {
-    //   getSurveyHargaCompetitor(
-    //     detailItem.id,
-    //     detailItem.tglasli,
-    //     detailItem.nik
-    //   );
+    // if (detailItem.countqtysales !== null) {
+    //   getQtySales(detailItem.qtysalesid);
     // }
-    if (detailItem.countqtysales !== null) {
-      getQtySales(detailItem.qtysalesid);
-    }
   }, []);
 
   const getQtySales = (props) => {
@@ -131,7 +115,7 @@ const DashboardDetail = ({ navigation, route }) => {
         console.log("error");
         return;
       }
-      // console.log("Data schedule", foundschedule);
+      // console.log("Data stock", foundschedule);
       setSurveyStock(foundschedule);
     });
   };
@@ -227,6 +211,8 @@ const DashboardDetail = ({ navigation, route }) => {
       setSoData(foundschedule);
     });
   };
+
+  const ListItem = ({ todo }) => {};
 
   function renderHeader() {
     return (
@@ -571,7 +557,9 @@ const DashboardDetail = ({ navigation, route }) => {
         {/* <LineDivider />
 
         {renderFooter()} */}
-        <View>
+
+        {/* component ilang  */}
+        {/* <View>
           {returData !== "" && (
             <Text
               style={{
@@ -649,7 +637,7 @@ const DashboardDetail = ({ navigation, route }) => {
         </View>
         <LineDivider />
         <View>
-          {surveyStock !== "" && (
+          {surveyStock.length > 0 && (
             <Text
               style={{
                 paddingHorizontal: 20,
@@ -661,16 +649,17 @@ const DashboardDetail = ({ navigation, route }) => {
             </Text>
           )}
 
-          {surveyStock !== "" &&
-            surveyStock.map((item) => (
+          {surveyStock.length > 0 &&
+            surveyStock.map((item) => {
               <ListItem
                 key={item.prodid}
                 prodid={item.prodid}
-                product={item.productname}
-                qty={item.qty}
-                unit={item.unit}
-              />
-            ))}
+                // product={item.productname}
+                // qty={item.qty}
+                // unit={item.unit}
+              />;
+              // console.log("item", item.prodid);
+            })}
         </View>
         <LineDivider />
         <View>
@@ -723,7 +712,7 @@ const DashboardDetail = ({ navigation, route }) => {
                 tglactual={item.tglactual}
               />
             ))}
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
