@@ -2,7 +2,7 @@
   "expo": {
     "name": "BPR_Salesman",
     "slug": "SalesSurveyBpr",
-    "version": "1.1.4",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/bpricon.png",
     "splash": {
@@ -16,12 +16,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.rahmadillah.SalesSurveyBpr",
-      "buildNumber": "1.1.4",
+      "buildNumber": "2.0.0",
       "supportsTablet": true
     },
     "android": {
       "package": "com.rahmadillah.SalesSurveyBpr",
-      "versionCode": 10,
+      "versionCode": 20,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iconraja.png",
         "backgroundColor": "#FFFFFF"
