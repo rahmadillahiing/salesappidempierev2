@@ -40,12 +40,13 @@ const OnBoarding = ({ navigation }) => {
   useEffect(() => {
     const checkingVersion = async () => {
       setIsLoading(true);
+      console.log("nama", Constants.expoConfig.name);
       let appDbVersionObject = await axios.get(
-        constants.loginServer + "/appversion/" + Constants.manifest.name
+        constants.loginServer + "/appversion/" + Constants.expoConfig.name
       );
       let appDbVersion =
         appDbVersionObject.data.results.data[0].AppProgram_Version;
-      let appVersionInternal = Constants.manifest.version;
+      let appVersionInternal = Constants.expoConfig.version;
 
       let intCompare = compareVersions(appDbVersion, appVersionInternal);
 

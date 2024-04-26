@@ -106,23 +106,23 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
   const flatListRef = React.useRef();
 
   // Drawer Animation
-  const progress = useDrawerProgress();
+  // const progress = useDrawerProgress();
 
-  const scale = Animated.interpolateNode(progress, {
-    inputRange: [0, 1],
-    outputRange: [1, 0.8],
-  });
+  // const scale = Animated.interpolateNode(progress, {
+  //   inputRange: [0, 1],
+  //   outputRange: [1, 0.8],
+  // });
 
-  const borderRadius = Animated.interpolateNode(progress, {
-    inputRange: [0, 1],
-    outputRange: [0, 26],
-  });
+  // const borderRadius = Animated.interpolateNode(progress, {
+  //   inputRange: [0, 1],
+  //   outputRange: [0, 26],
+  // });
 
-  const drawerAnimationStyle = {
-    borderRadius,
-    transform: [{ scale }],
-    overflow: "hidden",
-  };
+  // const drawerAnimationStyle = {
+  //   borderRadius,
+  //   transform: [{ scale }],
+  //   overflow: "hidden",
+  // };
 
   // Reanimated Shared Value
 
@@ -278,7 +278,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab }) => {
         flex: 1,
         backgroundColor: COLORS.white,
         overflow: "hidden",
-        ...drawerAnimationStyle,
+        // ...drawerAnimationStyle,
       }}
     >
       {/* Header */}

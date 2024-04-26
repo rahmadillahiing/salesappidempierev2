@@ -392,7 +392,7 @@ const CheckIn = ({ navigation }) => {
   };
 
   const getLokasi = async (result) => {
-    console.log("Cek user", result.jobid);
+    // console.log("Cek user", result.jobid);
     let kolom = "";
     let parameter = "";
     if (result.jobid == 1000006) {
@@ -479,6 +479,8 @@ const CheckIn = ({ navigation }) => {
     let { coords } = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.BestForNavigation,
     });
+
+    console.log("kordinat", coords);
     setLocation(JSON.stringify(coords));
     setLatitude(JSON.stringify(coords.latitude));
     setLongitude(JSON.stringify(coords.longitude));

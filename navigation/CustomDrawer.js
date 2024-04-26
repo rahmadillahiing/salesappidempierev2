@@ -488,7 +488,7 @@ const CustomDrawer = ({ selectedTab, setSelectedTab }) => {
       }}
     >
       <Drawer.Navigator
-        useLegacyImplementation
+        useLegacyImplementation={false}
         drawerType="slide"
         overlayColor="transparent"
         screenOptions={{
