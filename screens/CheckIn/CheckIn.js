@@ -499,11 +499,25 @@ const CheckIn = ({ navigation }) => {
       });
       // console.log("lokasi", lokasi);
       setIsGetLocation(true);
-      for (let item of lokasi) {
-        let address = `${item.district}, ${item.city}, ${item.region}, ${item.postalCode}`;
 
-        setDisplayCurrentAddress(address);
-      }
+      const alamat = axios
+        .get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}
+      &location_type=ROOFTOP&result_type=street_address&key=${constants.GOOGLE_MAP_API_KEY}`
+        )
+        .then((response) => {
+          // console.log(
+          //   "data",
+          //   JSON.stringify(response.data.results[0].formatted_address)
+          // );
+          setDisplayCurrentAddress(response.data.results[0].formatted_address);
+        });
+
+      // for (let item of lokasi) {
+      //   let address = `${item.district}, ${item.city}, ${item.region}, ${item.postalCode}`;
+
+      //   setDisplayCurrentAddress(address);
+      // }
     }
   };
 
