@@ -20,6 +20,7 @@ import { Camera } from "expo-camera";
 //async storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 import {
   Header,
@@ -88,7 +89,7 @@ const CheckIn = ({ navigation }) => {
     }
 
     // console.log("testing lokasi", location);
-  }, [dt]);
+  }, [isGetLocation]);
 
   // useEffect(() => {
   //   getUser();
@@ -151,7 +152,7 @@ const CheckIn = ({ navigation }) => {
     // console.log("lokasiLain", lokasiLain);
     // console.log("labellokasi", labellokasi);
     // console.log("value", valuelokasi);
-    if (displayCurrentAddress === "Wait, we are fetching you location...") {
+    if (isGetLocation == false) {
       Alert.alert(
         "Invalid Geo location",
         "Data Geotagging belum didapatkan, pastikan data sudah muncul terlebih dahulu sebelum melakukan check in"
@@ -244,7 +245,7 @@ const CheckIn = ({ navigation }) => {
       return;
     }
     // }
-
+    console.log("body", requestOptions);
     const url = constants.loginServer + "/insertsalescicov2";
     setIsLoading(true);
     // console.log("url", url);
@@ -253,7 +254,7 @@ const CheckIn = ({ navigation }) => {
         .get("content-type")
         ?.includes("application/json");
       const hasil1 = isJson && (await response.json());
-      // console.log("hasil insert", hasil1);
+      console.log("hasil insert", hasil1);
       if (!response.ok) {
         // get error message from body or default to response status
         // const error = (data && data.message) || response.status;
@@ -441,29 +442,52 @@ const CheckIn = ({ navigation }) => {
       }
     );
     const count = response.data.WindowTabData.RowCount;
-    // console.log("hitung", count);
+    console.log(
+      "hitung",
+      JSON.stringify(response.data.WindowTabData.DataSet.DataRow.field[0])
+    );
     const dataLokasi = [];
-    for (var i = 0; i < count; i++) {
+    if (count > 1) {
+      for (var i = 0; i < count; i++) {
+        dataLokasi.push({
+          key: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
+          label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+          value:
+            response.data.WindowTabData.DataSet.DataRow[i].field[0].val +
+            " " +
+            response.data.WindowTabData.DataSet.DataRow[i].field[3].val,
+          pricelistid:
+            response.data.WindowTabData.DataSet.DataRow[i].field[4].val,
+          oa: response.data.WindowTabData.DataSet.DataRow[i].field[6].val,
+          cl: response.data.WindowTabData.DataSet.DataRow[i].field[9].val,
+          custidemp:
+            response.data.WindowTabData.DataSet.DataRow[i].field[5].val,
+          clavailable:
+            response.data.WindowTabData.DataSet.DataRow[i].field[11].val,
+          bpid: response.data.WindowTabData.DataSet.DataRow[i].field[7].val,
+          wmin1: response.data.WindowTabData.DataSet.DataRow[i].field[12].val,
+          wmin2: response.data.WindowTabData.DataSet.DataRow[i].field[13].val,
+        });
+      }
+    } else {
       dataLokasi.push({
-        key: response.data.WindowTabData.DataSet.DataRow[i].field[0].val,
-        label: response.data.WindowTabData.DataSet.DataRow[i].field[1].val,
+        key: response.data.WindowTabData.DataSet.DataRow.field[0].val,
+        label: response.data.WindowTabData.DataSet.DataRow.field[1].val,
         value:
-          response.data.WindowTabData.DataSet.DataRow[i].field[0].val +
+          response.data.WindowTabData.DataSet.DataRow.field[0].val +
           " " +
-          response.data.WindowTabData.DataSet.DataRow[i].field[3].val,
-        pricelistid:
-          response.data.WindowTabData.DataSet.DataRow[i].field[4].val,
-        oa: response.data.WindowTabData.DataSet.DataRow[i].field[6].val,
-        cl: response.data.WindowTabData.DataSet.DataRow[i].field[9].val,
-        custidemp: response.data.WindowTabData.DataSet.DataRow[i].field[5].val,
-        clavailable:
-          response.data.WindowTabData.DataSet.DataRow[i].field[11].val,
-        bpid: response.data.WindowTabData.DataSet.DataRow[i].field[7].val,
-        wmin1: response.data.WindowTabData.DataSet.DataRow[i].field[12].val,
-        wmin2: response.data.WindowTabData.DataSet.DataRow[i].field[13].val,
+          response.data.WindowTabData.DataSet.DataRow.field[3].val,
+        pricelistid: response.data.WindowTabData.DataSet.DataRow.field[4].val,
+        oa: response.data.WindowTabData.DataSet.DataRow.field[6].val,
+        cl: response.data.WindowTabData.DataSet.DataRow.field[9].val,
+        custidemp: response.data.WindowTabData.DataSet.DataRow.field[5].val,
+        clavailable: response.data.WindowTabData.DataSet.DataRow.field[11].val,
+        bpid: response.data.WindowTabData.DataSet.DataRow.field[7].val,
+        wmin1: response.data.WindowTabData.DataSet.DataRow.field[12].val,
+        wmin2: response.data.WindowTabData.DataSet.DataRow.field[13].val,
       });
+      // console.log("data lokasi", dataLokasi);
     }
-    // console.log("data lokasi", dataLokasi);
     setItems(dataLokasi);
   };
 
@@ -480,7 +504,7 @@ const CheckIn = ({ navigation }) => {
       accuracy: Location.Accuracy.BestForNavigation,
     });
 
-    console.log("kordinat", coords);
+    // console.log("kordinat", coords);
     setLocation(JSON.stringify(coords));
     setLatitude(JSON.stringify(coords.latitude));
     setLongitude(JSON.stringify(coords.longitude));
@@ -491,6 +515,7 @@ const CheckIn = ({ navigation }) => {
     // );
 
     if (coords) {
+      // console.log("tes", "masuk cek kordinat");
       const { latitude, longitude } = coords;
 
       let lokasi = await Location.reverseGeocodeAsync({
@@ -500,24 +525,25 @@ const CheckIn = ({ navigation }) => {
       // console.log("lokasi", lokasi);
       setIsGetLocation(true);
 
-      const alamat = axios
-        .get(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}
-      &location_type=ROOFTOP&result_type=street_address&key=${constants.GOOGLE_MAP_API_KEY}`
-        )
-        .then((response) => {
-          // console.log(
-          //   "data",
-          //   JSON.stringify(response.data.results[0].formatted_address)
-          // );
-          setDisplayCurrentAddress(response.data.results[0].formatted_address);
-        });
+      // const alamat = axios
+      //   .get(
+      //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${constants.GOOGLE_MAP_API_KEY}`
+      //   )
+      //   .then((response) => {
+      //     console.log("translate", response.data.results[0].formatted_address);
 
-      // for (let item of lokasi) {
-      //   let address = `${item.district}, ${item.city}, ${item.region}, ${item.postalCode}`;
+      //     // console.log(
+      //     //   "data",
+      //     //   JSON.stringify(response.data.results[0].formatted_address)
+      //     // );
+      //     setDisplayCurrentAddress(response.data.results[0].formatted_address);
+      //   });
 
-      //   setDisplayCurrentAddress(address);
-      // }
+      for (let item of lokasi) {
+        let address = `${item.district}, ${item.city}, ${item.region}, ${item.postalCode}`;
+
+        setDisplayCurrentAddress(address);
+      }
     }
   };
 
@@ -794,6 +820,16 @@ const CheckIn = ({ navigation }) => {
     );
   }
 
+  const manipulatefoto = async (foto) => {
+    // console.log("foto", foto);
+    const manipResult = await manipulateAsync(foto, [], {
+      compress: 0.8,
+      format: SaveFormat.JPEG,
+    });
+    // console.log("data mani", manipResult.uri);
+    setImage(manipResult.uri.toString());
+  };
+
   function renderCamera() {
     return (
       <View
@@ -826,7 +862,8 @@ const CheckIn = ({ navigation }) => {
                   setUseCamera(false);
                   if (!r.cancelled) {
                     // console.log("uri urian", r.uri);
-                    setImage(r.uri);
+                    manipulatefoto(r.uri);
+                    // setImage(r.uri);
                   }
                   // console.log("response", JSON.stringify(r.uri));
                 }}

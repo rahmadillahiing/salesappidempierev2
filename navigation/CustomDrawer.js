@@ -78,7 +78,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
   const getUser = () => {
     GetDataLocal("user").then((res) => {
       const data = res;
-      console.log("profile di button", data);
+      // console.log("profile di button", data);
       setProfile(data);
       if (data.jobid == 1000006) {
         cekArPersalesman(res.salesrep);

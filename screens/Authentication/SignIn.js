@@ -72,10 +72,10 @@ const SignIn = ({ navigation }) => {
         },
       }
     );
-    console.log(
-      "login response status",
-      response.data.WindowTabData.DataSet.DataRow
-    );
+    // console.log(
+    //   "login response status",
+    //   response.data.WindowTabData.DataSet.DataRow
+    // );
 
     if (response.status == 200) {
       if (response.data.WindowTabData.RowCount > 0) {
@@ -120,7 +120,7 @@ const SignIn = ({ navigation }) => {
     <AuthLayout
       title="Sales Informasi Sistem"
       subtitle="Selamat datang, mohon login"
-      version={"Versi " + Constants.manifest.version}
+      version={"Versi 3.0.0"}
     >
       <View
         style={{

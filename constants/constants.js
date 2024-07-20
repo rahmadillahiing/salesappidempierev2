@@ -15,7 +15,9 @@ const idempServerRmp = "http://108.137.95.190:9090/";
 // const idempServerRmp = "http://103.94.127.82:9999/";
 
 //bpr production internal aws
-const loginServer = "http://108.137.170.97:8002";
+// const loginServer = "http://108.137.170.97:8002";
+// const loginServer = "https://berasraja.sep-food.com:10001";
+const loginServer = "https://berasraja.sep-food.com:8003";
 //Cash Collection Server
 const CashColServer = "https://berasraja.sep-food.com:8005";
 

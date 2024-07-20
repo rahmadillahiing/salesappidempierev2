@@ -548,16 +548,16 @@ const Home = (props) => {
     let c = a.diff(b, "minutes");
 
     if (c >= 5) {
-      console.log("lokasi", lokasi);
-      console.log("cek string", isNaN(lokasi.locationid));
+      // console.log("lokasi", lokasi);
+      // console.log("cek string", isNaN(lokasi.locationid));
       if (profile.jobid == "1000006" && lokasi.locationid !== "0") {
         let query = {
           categories: 1,
           name: lokasi.customer,
         };
-        console.log("query", query);
+        // console.log("query", query);
         let cekfoto = find_in_object(popular, query);
-        console.log("tes", cekfoto);
+        // console.log("tes", cekfoto);
 
         if (cekfoto[0].dimagea == null || cekfoto[0].dimageb == null) {
           Alert.alert("Warning", "Lengkapi Foto Display before dan after");
@@ -886,7 +886,7 @@ const Home = (props) => {
         >
           Total :Rp.{" "}
           {arCustomer[0].totalinv > 0
-            ? NumberFormat(arCustomer[0].totalinv).toString()
+            ? NumberFormat(arCustomer[0].totalinv.toString())
             : 0}
         </Text>
       </View>
@@ -1012,7 +1012,7 @@ const Home = (props) => {
                   >
                     Nilai Invoice Due Date :Rp.{" "}
                     {arSalesman.invoicevalue > 0
-                      ? NumberFormat(arSalesman.invoicevalue).toString()
+                      ? NumberFormat(arSalesman.invoicevalue.toString())
                       : 0}
                   </Text>
                 </TouchableOpacity>

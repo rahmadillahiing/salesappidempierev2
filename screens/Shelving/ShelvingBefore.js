@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { Camera } from "expo-camera";
 // import * as ImageManipulator from "expo-image-manipulator";
 import { GetDataLocal } from "../../utils";
@@ -88,7 +89,7 @@ const ShelvingBefore = ({ navigation }) => {
 
   function getLokasi() {
     GetDataLocal("lokasi").then((res) => {
-      console.log("lokasi survey", res);
+      // console.log("lokasi survey", res);
       if (res !== null) {
         setLokasi(res);
       } else {
@@ -160,7 +161,7 @@ const ShelvingBefore = ({ navigation }) => {
                           lokasiname: lokasi.customer,
                         }),
                       };
-                      console.log("kirim data foto :", requestOptions);
+                      // console.log("kirim data foto :", requestOptions);
                       const url = constants.loginServer + "/insertsalesdisplay";
                       fetch(url, requestOptions).then(async (response) => {
                         const isJson = response.headers
@@ -277,6 +278,14 @@ const ShelvingBefore = ({ navigation }) => {
     );
   }
 
+  const manipulatefoto = async (foto) => {
+    const manipResult = await manipulateAsync(foto, [], {
+      compress: 0.8,
+      format: SaveFormat.JPEG,
+    });
+    setImage(manipResult.uri.toString());
+  };
+
   function renderShelving() {
     return (
       <View
@@ -308,7 +317,8 @@ const ShelvingBefore = ({ navigation }) => {
                     const r = await takePicture();
                     setUseCamera(false);
                     if (!r.cancelled) {
-                      setImage(r.uri);
+                      // setImage(r.uri);
+                      manipulatefoto(r.uri);
                     }
                     // console.log("response", JSON.stringify(r.uri));
                   }}
